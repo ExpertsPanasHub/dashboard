@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ГЕРМЕС — Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root {
+    --bg: #050507;
+    --bg2: #080810;
+    --bg3: #0d0d1a;
+    --gold: #ffc107;
+    --gold2: #ffab00;
+    --cyan: #00e5ff;
+    --cyan2: #00b0cc;
+    --red: #e53935;
+    --green: #66bb6a;
+    --purple: #ab47bc;
+    --card: rgba(255,255,255,0.03);
+    --card-border: rgba(255,255,255,0.07);
+    --text: #e0e0e0;
+    --text-dim: #7a8090;
+    --glow-gold: 0 0 20px rgba(255,193,7,0.4);
+    --glow-cyan: 0 0 20px rgba(0,229,255,0.4);
+    --glow-green: 0 0 20px rgba(102,187,106,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%; min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── SCANLINE OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    animation: scanMove 8s linear infinite;
+  }
+
+  @keyframes scanMove {
+    0%   { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+  }
+
+  /* ── HUD CANVAS BACKGROUND ── */
+  #hud-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.25;
+  }
+
+  /* ── ARC REACTOR ── */
+  .arc-reactor {
+    position: fixed;
+    bottom: -80px; right: -80px;
+    width: 220px; height: 220px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+  }
+  .arc-reactor svg { width: 100%; height: 100%; animation: arcSpin 12s linear infinite; }
+  .arc-reactor2 {
+    position: fixed;
+    top: -60px; left: -60px;
+    width: 180px; height: 180px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.1;
+  }
+  .arc-reactor2 svg { width: 100%; height: 100%; animation: arcSpin 20s linear infinite reverse; }
+
+  @keyframes arcSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  /* ── LAYOUT ── */
+  #app {
+    position: relative; z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 20px 16px 12px;
+    text-align: center;
+    position: relative;
+  }
+
+  .header-logo {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin-bottom: 6px;
+  }
+
+  .header-logo .bolt {
+    font-size: 28px;
+    filter: drop-shadow(0 0 10px var(--gold));
+    animation: boltPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes boltPulse {
+    0%, 100% { filter: drop-shadow(0 0 8px var(--gold)); }
+    50% { filter: drop-shadow(0 0 20px var(--gold)) drop-shadow(0 0 40px rgba(255,193,7,0.5)); }
+  }
+
+  .header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-shadow: var(--glow-gold);
+  }
+
+  .header-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    opacity: 0.8;
+    margin-bottom: 10px;
+  }
+
+  .status-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    padding: 6px 16px;
+    background: rgba(0,229,255,0.04);
+    border-top: 1px solid rgba(0,229,255,0.08);
+    border-bottom: 1px solid rgba(0,229,255,0.08);
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: dotPulse 2s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
+    50% { opacity: 0.6; box-shadow: 0 0 14px var(--green); }
+  }
+
+  .status-item { color: var(--text-dim); }
+  .status-item span { color: var(--cyan); }
+
+  /* ── TABS ── */
+  .tab-bar {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    display: flex;
+    background: rgba(5,5,7,0.95);
+    border-top: 1px solid rgba(255,193,7,0.15);
+    z-index: 100;
+    backdrop-filter: blur(20px);
+  }
+
+  .tab-btn {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 8px 4px;
+    cursor: pointer;
+    border: none; background: none;
+    color: var(--text-dim);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 7px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    position: relative;
+    gap: 3px;
+  }
+
+  .tab-btn .tab-icon { font-size: 18px; transition: all 0.2s ease; }
+
+  .tab-btn::before {
+    content: '';
+    position: absolute; top: 0; left: 10%; right: 10%;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 0 0 2px 2px;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+
+  .tab-btn.active {
+    color: var(--gold);
+  }
+
+  .tab-btn.active::before { transform: scaleX(1); }
+  .tab-btn.active .tab-icon { filter: drop-shadow(0 0 6px var(--gold)); }
+
+  /* ── TAB CONTENT ── */
+  .tab-content { display: none; padding: 12px 14px; }
+  .tab-content.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px; margin-top: 8px;
+  }
+
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,193,7,0.4), transparent);
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,193,7,0.3), transparent);
+  }
+
+  /* ── METRICS GRID ── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .metric-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .metric-card:hover { border-color: rgba(255,193,7,0.2); }
+
+  .metric-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .metric-card.gold::after  { background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .metric-card.cyan::after  { background: linear-gradient(90deg, transparent, var(--cyan), transparent); }
+  .metric-card.green::after { background: linear-gradient(90deg, transparent, var(--green), transparent); }
+  .metric-card.red::after   { background: linear-gradient(90deg, transparent, var(--red), transparent); }
+
+  .metric-emoji { font-size: 22px; margin-bottom: 6px; display: block; }
+
+  .metric-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .metric-card.gold .metric-value  { color: var(--gold); text-shadow: var(--glow-gold); }
+  .metric-card.cyan .metric-value  { color: var(--cyan); text-shadow: var(--glow-cyan); }
+  .metric-card.green .metric-value { color: var(--green); }
+  .metric-card.red .metric-value   { color: var(--red); }
+
+  .metric-label {
+    font-size: 9px;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  /* ── BUSINESS CARD ── */
+  .business-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    position: relative; overflow: hidden;
+  }
+
+  .business-header {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .business-name-wrap { display: flex; align-items: center; gap: 8px; }
+
+  .business-emoji {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    background: rgba(255,193,7,0.08);
+    border: 1px solid rgba(255,193,7,0.15);
+  }
+
+  .business-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+
+  .business-desc { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  .business-tasks {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .progress-wrap { position: relative; }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s cubic-bezier(.25,.46,.45,.94);
+    position: relative;
+  }
+
+  .progress-fill::after {
+    content: '';
+    position: absolute; right: 0; top: -2px;
+    width: 6px; height: 8px;
+    border-radius: 3px;
+  }
+
+  .progress-fill.gold { background: linear-gradient(90deg, var(--gold2), var(--gold)); }
+  .progress-fill.gold::after { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+  .progress-fill.cyan { background: linear-gradient(90deg, var(--cyan2), var(--cyan)); }
+  .progress-fill.green { background: linear-gradient(90deg, #43a047, var(--green)); }
+  .progress-fill.red { background: linear-gradient(90deg, #b71c1c, var(--red)); }
+
+  .progress-pct {
+    position: absolute; right: 0; top: -18px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px; font-weight: 700;
+    color: var(--gold);
+  }
+
+  /* ── AGENT CARD ── */
+  .agent-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    transition: border-color 0.3s, transform 0.2s;
+  }
+
+  .agent-card:active { transform: scale(0.99); }
+
+  .agent-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .agent-card.gold-accent::before { background: var(--gold); box-shadow: 2px 0 12px rgba(255,193,7,0.4); }
+  .agent-card.cyan-accent::before { background: var(--cyan); box-shadow: 2px 0 12px rgba(0,229,255,0.4); }
+  .agent-card.green-accent::before { background: var(--green); box-shadow: 2px 0 12px rgba(102,187,106,0.4); }
+
+  .agent-head {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .agent-avatar {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .agent-avatar::after {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 10px;
+    border: 1px solid currentColor;
+    opacity: 0.3;
+  }
+
+  .agent-avatar.gold-av { background: rgba(255,193,7,0.1); }
+  .agent-avatar.cyan-av { background: rgba(0,229,255,0.1); }
+  .agent-avatar.green-av { background: rgba(102,187,106,0.1); }
+
+  .agent-info { flex: 1; }
+
+  .agent-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .agent-card.gold-accent .agent-name { color: var(--gold); }
+  .agent-card.cyan-accent .agent-name { color: var(--cyan); }
+  .agent-card.green-accent .agent-name { color: var(--green); }
+  .agent-card.purple-accent::before { background: var(--purple); box-shadow: 2px 0 12px rgba(171,71,188,0.4); }
+  .agent-card.purple-accent .agent-name { color: var(--purple); }
+  .agent-avatar.purple-av { background: rgba(171,71,188,0.1); }
+
+  .agent-role { font-size: 11px; color: var(--text-dim); margin-bottom: 2px; }
+  .agent-bot { font-size: 10px; color: rgba(255,255,255,0.35); font-family: monospace; }
+
+  .agent-status {
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px; font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--green);
+    padding: 3px 8px;
+    background: rgba(102,187,106,0.1);
+    border: 1px solid rgba(102,187,106,0.2);
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .agent-full {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    padding: 8px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    border-left: 2px solid rgba(255,255,255,0.1);
+  }
+
+  .agent-model {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    padding: 4px 8px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 4px;
+    font-family: monospace;
+  }
+
+  .model-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 5px var(--cyan); }
+
+  .caps-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .caps-list {
+    display: flex; flex-wrap: wrap; gap: 5px;
+  }
+
+  .cap-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid;
+    color: var(--text);
+  }
+
+  .gold-accent .cap-tag { border-color: rgba(255,193,7,0.25); background: rgba(255,193,7,0.06); }
+  .cyan-accent .cap-tag { border-color: rgba(0,229,255,0.25); background: rgba(0,229,255,0.06); }
+  .green-accent .cap-tag { border-color: rgba(102,187,106,0.25); background: rgba(102,187,106,0.06); }
+
+  /* ── ANALYTICS ── */
+  .stat-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .stat-row:last-child { border-bottom: none; }
+
+  .stat-label { font-size: 12px; color: var(--text-dim); }
+
+  .stat-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .stat-value.cyan { color: var(--cyan); }
+  .stat-value.green { color: var(--green); }
+  .stat-value.red { color: var(--red); }
+
+  /* model breakdown */
+  .model-bar-item { margin-bottom: 12px; }
+
+  .model-bar-head {
+    display: flex; justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 11px;
+  }
+
+  .model-bar-label { color: var(--text); }
+  .model-bar-pct { font-family: 'Orbitron', sans-serif; font-weight: 700; }
+
+  /* weekday bars */
+  .month-btn {
+    background: rgba(0,229,255,0.1);
+    border: 1px solid rgba(0,229,255,0.3);
+    color: var(--cyan);
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .month-btn:active { background: rgba(0,229,255,0.25); }
+  .month-btn:disabled { opacity: 0.3; cursor: default; }
+
+  .delta-up { color: var(--green) !important; }
+  .delta-down { color: var(--red) !important; }
+  .delta-neutral { color: var(--text-dim) !important; }
+
+  .day-bars { margin-top: 4px; }
+
+  .day-bar-row {
+    display: flex; align-items: center;
+    gap: 8px; margin-bottom: 7px;
+  }
+
+  .day-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-dim);
+    width: 24px;
+    flex-shrink: 0;
+  }
+
+  .day-bar-wrap {
+    flex: 1;
+    height: 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .day-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    position: relative;
+    transition: width 1.2s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  .day-bar-fill.weekend { background: linear-gradient(90deg, rgba(0,180,200,0.6), var(--cyan)); }
+  .day-bar-fill.weekday { background: linear-gradient(90deg, rgba(200,150,0,0.5), var(--gold)); }
+
+  .day-bar-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-dim);
+    width: 50px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* activity dots */
+  .activity-bars {
+    display: flex; align-items: flex-end;
+    gap: 6px; height: 50px; margin-top: 8px;
+  }
+
+  .act-bar-wrap {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+  }
+
+  .act-bar {
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+    transition: height 1s ease;
+  }
+
+  .act-bar.gold-bar { background: linear-gradient(180deg, var(--gold), rgba(255,193,7,0.3)); }
+  .act-bar.cyan-bar { background: linear-gradient(180deg, var(--cyan), rgba(0,229,255,0.3)); }
+
+  .act-label {
+    font-size: 8px;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* ai usage cards */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; margin-bottom: 14px;
+  }
+
+  .usage-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .usage-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 3px;
+  }
+
+  .usage-lbl { font-size: 8px; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; color: var(--text-dim); }
+
+  /* ── PROJECTS ── */
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 13px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: border-color 0.3s;
+  }
+
+  .project-head {
+    display: flex; align-items: center;
+    justify-content: space-between;
+  }
+
+  .project-name-wrap { display: flex; align-items: center; gap: 8px; }
+
+  .project-emoji { font-size: 18px; }
+
+  .project-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .project-meta {
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .project-biz {
+    font-size: 9px;
+    color: var(--text-dim);
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+  }
+
+  .project-tasks {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+  .badge.done    { background: rgba(102,187,106,0.12); color: var(--green); border: 1px solid rgba(102,187,106,0.25); }
+  .badge.active  { background: rgba(0,229,255,0.1); color: var(--cyan); border: 1px solid rgba(0,229,255,0.25); }
+  .badge.todo    { background: rgba(255,193,7,0.08); color: var(--gold); border: 1px solid rgba(255,193,7,0.2); }
+  .badge.blocked { background: rgba(229,57,53,0.1); color: var(--red); border: 1px solid rgba(229,57,53,0.25); }
+
+  .badge.done    .badge-dot { background: var(--green); }
+  .badge.active  .badge-dot { background: var(--cyan); animation: dotPulse 1.5s infinite; }
+  .badge.todo    .badge-dot { background: var(--gold); }
+  .badge.blocked .badge-dot { background: var(--red); }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 20px; }
+
+  .timeline::before {
+    content: '';
+    position: absolute; left: 7px; top: 8px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--gold), rgba(255,193,7,0.1));
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 16px;
+    padding-left: 16px;
+  }
+
+  .tl-dot {
+    position: absolute; left: -20px; top: 4px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid;
+  }
+
+  .tl-dot.launch   { border-color: var(--cyan);  background: rgba(0,229,255,0.15); }
+  .tl-dot.milestone{ border-color: var(--gold);  background: rgba(255,193,7,0.15); }
+  .tl-dot.analysis { border-color: var(--purple); background: rgba(171,71,188,0.15); }
+  .tl-dot.feature  { border-color: var(--green); background: rgba(102,187,106,0.15); }
+
+  .tl-dot-inner {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+  }
+
+  .tl-dot.launch    .tl-dot-inner { background: var(--cyan); box-shadow: 0 0 4px var(--cyan); }
+  .tl-dot.milestone .tl-dot-inner { background: var(--gold); box-shadow: 0 0 4px var(--gold); }
+  .tl-dot.analysis  .tl-dot-inner { background: var(--purple); }
+  .tl-dot.feature   .tl-dot-inner { background: var(--green); }
+
+  .tl-date {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+
+  .tl-event {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .tl-type-badge {
+    display: inline-block;
+    font-size: 8px;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+
+  .type-launch   { background: rgba(0,229,255,0.08);   color: var(--cyan);   border: 1px solid rgba(0,229,255,0.2); }
+  .type-milestone{ background: rgba(255,193,7,0.08);   color: var(--gold);   border: 1px solid rgba(255,193,7,0.2); }
+  .type-analysis { background: rgba(171,71,188,0.08);  color: var(--purple); border: 1px solid rgba(171,71,188,0.2); }
+  .type-feature  { background: rgba(102,187,106,0.08); color: var(--green);  border: 1px solid rgba(102,187,106,0.2); }
+
+  /* ── DIVIDER ── */
+  .hud-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,193,7,0.2), transparent);
+    margin: 14px 0;
+  }
+
+  /* ── CORNER DECORATIONS ── */
+  .corner-tl, .corner-tr, .corner-bl, .corner-br {
+    position: absolute;
+    width: 12px; height: 12px;
+  }
+
+  .corner-tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; border-radius: 2px 0 0 0; }
+  .corner-tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; border-radius: 0 2px 0 0; }
+  .corner-bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; border-radius: 0 0 0 2px; }
+  .corner-br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; border-radius: 0 0 2px 0; }
+
+  .gold-corners .corner-tl,
+  .gold-corners .corner-tr,
+  .gold-corners .corner-bl,
+  .gold-corners .corner-br { border-color: rgba(255,193,7,0.4); }
+
+  /* ── PULSE ANIMATION ── */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── SCROLL ── */
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,193,7,0.3); border-radius: 2px; }
+
+  /* ── GLOW BORDER ON HOVER ── */
+  .agent-card.gold-accent:hover  { border-color: rgba(255,193,7,0.3); }
+  .agent-card.cyan-accent:hover  { border-color: rgba(0,229,255,0.3); }
+  .agent-card.green-accent:hover { border-color: rgba(102,187,106,0.3); }
+
+  /* number counter animation */
+  .count-up { display: inline-block; }
+
+  /* ── SYSTEM STATUS WIDGET ── */
+  .sys-status {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .sys-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .sys-indicator {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .sys-indicator.online  { background: var(--green); box-shadow: 0 0 6px var(--green); animation: dotPulse 2s infinite; }
+  .sys-indicator.standby { background: var(--gold); animation: dotPulse 3s infinite; }
+
+  .sys-label { font-size: 10px; color: var(--text-dim); flex: 1; }
+  .sys-val { font-family: 'Orbitron', sans-serif; font-size: 9px; color: var(--cyan); font-weight: 600; }
+
+  /* ── FADE IN ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .tab-content.active > * {
+    animation: fadeUp 0.3s ease forwards;
+  }
+
+  .tab-content.active > *:nth-child(1) { animation-delay: 0.00s; }
+  .tab-content.active > *:nth-child(2) { animation-delay: 0.05s; }
+  .tab-content.active > *:nth-child(3) { animation-delay: 0.10s; }
+  .tab-content.active > *:nth-child(4) { animation-delay: 0.15s; }
+  .tab-content.active > *:nth-child(5) { animation-delay: 0.20s; }
+  .tab-content.active > *:nth-child(6) { animation-delay: 0.25s; }
+  .tab-content.active > *:nth-child(7) { animation-delay: 0.30s; }
+
+</style>
+</head>
+<body>
+
+<!-- HUD CANVAS -->
+<canvas id="hud-canvas"></canvas>
+
+<!-- ARC REACTORS -->
+<div class="arc-reactor">
+  <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="95" stroke="#ffc107" stroke-width="1" stroke-dasharray="4 8"/>
+    <circle cx="100" cy="100" r="75" stroke="#00e5ff" stroke-width="0.5" stroke-dasharray="2 6"/>
+    <circle cx="100" cy="100" r="55" stroke="#ffc107" stroke-width="1.5" stroke-dasharray="8 4"/>
+    <circle cx="100" cy="100" r="35" stroke="#00e5ff" stroke-width="0.5"/>
+    <circle cx="100" cy="100" r="15" stroke="#ffc107" stroke-width="2" fill="rgba(255,193,7,0.1)"/>
+    <line x1="100" y1="5" x2="100" y2="195" stroke="#00e5ff" stroke-width="0.3" opacity="0.5"/>
+    <line x1="5" y1="100" x2="195" y2="100" stroke="#00e5ff" stroke-width="0.3" opacity="0.5"/>
+    <line x1="33" y1="33" x2="167" y2="167" stroke="#ffc107" stroke-width="0.3" opacity="0.3"/>
+    <line x1="167" y1="33" x2="33" y2="167" stroke="#ffc107" stroke-width="0.3" opacity="0.3"/>
+  </svg>
+</div>
+
+<div class="arc-reactor2">
+  <svg viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="100" r="90" stroke="#00e5ff" stroke-width="0.8" stroke-dasharray="3 9"/>
+    <circle cx="100" cy="100" r="65" stroke="#ffc107" stroke-width="0.5" stroke-dasharray="6 6"/>
+    <circle cx="100" cy="100" r="40" stroke="#00e5ff" stroke-width="1" stroke-dasharray="4 4"/>
+    <circle cx="100" cy="100" r="20" stroke="#ffc107" stroke-width="0.8"/>
+  </svg>
+</div>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-logo">
+      <span class="bolt">⚡</span>
+      <div class="header-title">ГЕРМЕС</div>
+      <span class="bolt">⚡</span>
+    </div>
+    <div class="header-subtitle">COMMAND CENTER · SYSTEM OVERVIEW</div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span><span class="status-dot"></span></span>
+    <span class="status-item">ONLINE</span>
+    <span>·</span>
+    <span class="status-item">АГЕНТОВ: <span>4</span></span>
+    <span>·</span>
+    <span class="status-item">ПРОЕКТОВ: <span>10</span></span>
+  </div>
+
+  <!-- ══════════ TAB: ОБЗОР ══════════ -->
+  <div class="tab-content active" id="tab-overview">
+
+    <!-- METRICS -->
+    <div class="section-header" style="margin-top:16px">
+      <div class="section-title">МЕТРИКИ СИСТЕМЫ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card gold">
+        <span class="metric-emoji">📁</span>
+        <div class="metric-value" data-target="10">10</div>
+        <div class="metric-label">ПРОЕКТОВ</div>
+      </div>
+      <div class="metric-card green">
+        <span class="metric-emoji">✅</span>
+        <div class="metric-value">7/10</div>
+        <div class="metric-label">ЗАВЕРШЕНО</div>
+      </div>
+      <div class="metric-card cyan">
+        <span class="metric-emoji">⏱️</span>
+        <div class="metric-value">12ч</div>
+        <div class="metric-label">DEV TIME</div>
+      </div>
+      <div class="metric-card red">
+        <span class="metric-emoji">📈</span>
+        <div class="metric-value">70%</div>
+        <div class="metric-label">ПРОГРЕСС</div>
+      </div>
+    </div>
+
+    <!-- BUSINESSES -->
+    <div class="section-header">
+      <div class="section-title">НАПРАВЛЕНИЯ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="business-card gold-corners" style="position:relative">
+      <div class="corner-tl"></div><div class="corner-tr"></div>
+      <div class="corner-bl"></div><div class="corner-br"></div>
+      <div class="business-header">
+        <div class="business-name-wrap">
+          <div class="business-emoji">🏠</div>
+          <div>
+            <div class="business-name">KARCZMA DID PANAS</div>
+            <div class="business-desc">Украинский ресторан в Познани</div>
+          </div>
+        </div>
+        <div class="business-tasks">5/8</div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-pct">65%</div>
+        <div class="progress-bar" style="margin-top:6px">
+          <div class="progress-fill gold" style="width:65%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="business-card" style="position:relative">
+      <div class="corner-tl" style="border-color:rgba(0,229,255,0.3)"></div>
+      <div class="corner-tr" style="border-color:rgba(0,229,255,0.3)"></div>
+      <div class="corner-bl" style="border-color:rgba(0,229,255,0.3)"></div>
+      <div class="corner-br" style="border-color:rgba(0,229,255,0.3)"></div>
+      <div class="business-header">
+        <div class="business-name-wrap">
+          <div class="business-emoji">🎓</div>
+          <div>
+            <div class="business-name">ОНЛАЙН-ШКОЛЫ</div>
+            <div class="business-desc">Продюсирование экспертов</div>
+          </div>
+        </div>
+        <div class="business-tasks" style="color:var(--cyan)">1/5</div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-pct" style="color:var(--cyan)">20%</div>
+        <div class="progress-bar" style="margin-top:6px">
+          <div class="progress-fill cyan" style="width:20%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYSTEM STATUS -->
+    <div class="section-header">
+      <div class="section-title">СТАТУС СИСТЕМ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="card">
+      <div class="sys-status">
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">ГЕРМЕС</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">ФИН. ДИР.</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">БОТ ФАКТУР</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">POSBISTRO</div>
+          <div class="sys-val">SYNC</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-overview -->
+
+  <!-- ══════════ TAB: АГЕНТЫ ══════════ -->
+  <div class="tab-content" id="tab-agents">
+
+    <div class="section-header" style="margin-top:16px">
+      <div class="section-title">AI АГЕНТЫ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- ГЕРМЕС -->
+    <div class="agent-card gold-accent">
+      <div class="agent-head">
+        <div class="agent-avatar gold-av">⚡</div>
+        <div class="agent-info">
+          <div class="agent-name">ГЕРМЕС</div>
+          <div class="agent-role">Личный ассистент / AI Проводник</div>
+          <div class="agent-bot">@hermes_openclaw_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Герой Единого Рабочего Менеджмента и Электронных Систем</div>
+      <div class="agent-model"><span class="model-dot"></span>Claude Opus 4</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Автоматизация задач</span>
+        <span class="cap-tag">Ресёрч</span>
+        <span class="cap-tag">Кодинг</span>
+        <span class="cap-tag">Управление ботами</span>
+        <span class="cap-tag">Голосовые сообщения</span>
+      </div>
+    </div>
+
+    <!-- ФИНАНСОВЫЙ ДИРЕКТОР -->
+    <div class="agent-card cyan-accent">
+      <div class="agent-head">
+        <div class="agent-avatar cyan-av">🎩</div>
+        <div class="agent-info">
+          <div class="agent-name">ФИН. ДИРЕКТОР</div>
+          <div class="agent-role">CFO / Финансовый аналитик</div>
+          <div class="agent-bot">@panas_findir_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">AI Директор ресторана Karczma Did Panas</div>
+      <div class="agent-model"><span class="model-dot"></span>Claude Opus 4</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">P&amp;L анализ</span>
+        <span class="cap-tag">Точка безубыточности</span>
+        <span class="cap-tag">Уровни прибыли</span>
+        <span class="cap-tag">POSbistro интеграция</span>
+        <span class="cap-tag">Автоотчёты</span>
+      </div>
+    </div>
+
+    <!-- БОТ ФАКТУР -->
+    <div class="agent-card green-accent">
+      <div class="agent-head">
+        <div class="agent-avatar green-av">📋</div>
+        <div class="agent-info">
+          <div class="agent-name">БОТ ФАКТУР</div>
+          <div class="agent-role">Бухгалтер / Контроль оплат</div>
+          <div class="agent-bot">@didpanas_boss_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Система учёта и контроля фактур поставщиков</div>
+      <div class="agent-model"><span class="model-dot" style="background:var(--green)"></span>Claude Sonnet 4</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Парсинг PDF фактур</span>
+        <span class="cap-tag">Напоминания об оплате</span>
+        <span class="cap-tag">Контроль просрочек</span>
+        <span class="cap-tag">Дубликаты</span>
+      </div>
+    </div>
+
+    <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
+    <div class="agent-card purple-accent">
+      <div class="agent-head">
+        <div class="agent-avatar purple-av">🏢</div>
+        <div class="agent-info">
+          <div class="agent-name">ПАНЕЛЬ УПРАВЛЕНИЯ</div>
+          <div class="agent-role">Command Center / Дашборд</div>
+          <div class="agent-bot">@germes_center_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Единая панель управления всеми агентами</div>
+      <div class="agent-model"><span class="model-dot" style="background:var(--purple)"></span>Static HTML</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Mini App</span>
+        <span class="cap-tag">Мониторинг агентов</span>
+        <span class="cap-tag">Финансовая аналитика</span>
+        <span class="cap-tag">Статус проектов</span>
+      </div>
+    </div>
+
+  </div><!-- /tab-agents -->
+
+  <!-- ══════════ TAB: АНАЛИТИКА ══════════ -->
+  <div class="tab-content" id="tab-analytics">
+
+    <!-- AI USAGE -->
+    <div class="section-header" style="margin-top:16px">
+      <div class="section-title">AI ИСПОЛЬЗОВАНИЕ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="usage-grid">
+      <div class="usage-card">
+        <div class="usage-val" style="color:var(--gold)">2.5M</div>
+        <div class="usage-lbl">ТОКЕНОВ</div>
+      </div>
+      <div class="usage-card">
+        <div class="usage-val" style="color:var(--cyan)">$45</div>
+        <div class="usage-lbl">СТОИМОСТЬ</div>
+      </div>
+      <div class="usage-card">
+        <div class="usage-val" style="color:var(--green)">350</div>
+        <div class="usage-lbl">API CALLS</div>
+      </div>
+    </div>
+
+    <!-- MODEL BREAKDOWN -->
+    <div class="card">
+      <div class="section-header" style="margin:0 0 12px">
+        <div class="section-title">МОДЕЛИ</div>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="model-bar-item">
+        <div class="model-bar-head">
+          <span class="model-bar-label">Claude Opus 4</span>
+          <span class="model-bar-pct" style="color:var(--gold)">60%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill gold" style="width:60%"></div>
+        </div>
+      </div>
+
+      <div class="model-bar-item">
+        <div class="model-bar-head">
+          <span class="model-bar-label">Claude Sonnet 4</span>
+          <span class="model-bar-pct" style="color:var(--cyan)">30%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill cyan" style="width:30%"></div>
+        </div>
+      </div>
+
+      <div class="model-bar-item" style="margin-bottom:0">
+        <div class="model-bar-head">
+          <span class="model-bar-label">Claude Haiku</span>
+          <span class="model-bar-pct" style="color:var(--green)">10%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill green" style="width:10%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY ACTIVITY -->
+    <div class="card">
+      <div class="section-header" style="margin:0 0 8px">
+        <div class="section-title">АКТИВНОСТЬ (7 ДНЕЙ)</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="activity-bars" id="activity-bars"></div>
+    </div>
+
+    <!-- FINANCIAL -->
+    <div class="section-header">
+      <div class="section-title">ФИНАНСЫ РЕСТОРАНА</div>
+      <div class="section-line"></div>
+    </div>
+
+    <!-- Month selector -->
+    <div class="card" style="padding:8px 12px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <button class="month-btn" id="month-prev" onclick="changeMonth(-1)">◀</button>
+        <span id="month-label" style="font-family:'Orbitron',sans-serif;font-size:13px;color:var(--cyan)">МАРТ 2026</span>
+        <button class="month-btn" id="month-next" onclick="changeMonth(1)">▶</button>
+      </div>
+    </div>
+
+    <div class="card" id="finance-card">
+      <div class="stat-row">
+        <span class="stat-label">Выручка</span>
+        <span class="stat-value" id="fin-revenue">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">vs прошлый месяц</span>
+        <span class="stat-value" id="fin-delta">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Средний чек</span>
+        <span class="stat-value" id="fin-avg-check">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Чеков</span>
+        <span class="stat-value" id="fin-receipts">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Безубыточность</span>
+        <span class="stat-value red">108 987 PLN</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Маржа</span>
+        <span class="stat-value green">76.44%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Food cost</span>
+        <span class="stat-value cyan">23.56%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">ФОТ (весь)</span>
+        <span class="stat-value">58 737 PLN</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">ФОТ % от выручки</span>
+        <span class="stat-value" id="fin-fot-pct">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Загрузка (40 мест)</span>
+        <span class="stat-value" id="fin-occupancy">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Выручка/работник</span>
+        <span class="stat-value" id="fin-per-employee">—</span>
+      </div>
+    </div>
+
+    <!-- REVENUE BY WEEKDAY -->
+    <div class="card">
+      <div class="section-header" style="margin:0 0 12px">
+        <div class="section-title">ВЫРУЧКА ПО ДНЯМ</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="day-bars" id="day-bars"></div>
+    </div>
+
+  </div><!-- /tab-analytics -->
+
+  <!-- ══════════ TAB: ПРОЕКТЫ ══════════ -->
+  <div class="tab-content" id="tab-projects">
+
+    <div class="section-header" style="margin-top:16px">
+      <div class="section-title">ПРОЕКТЫ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div id="projects-list"></div>
+
+  </div><!-- /tab-projects -->
+
+  <!-- ══════════ TAB: ТАЙМЛАЙН ══════════ -->
+  <div class="tab-content" id="tab-timeline">
+
+    <div class="section-header" style="margin-top:16px">
+      <div class="section-title">ТАЙМЛАЙН РАЗРАБОТКИ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="timeline" id="timeline-list"></div>
+
+  </div><!-- /tab-timeline -->
+
+</div><!-- /app -->
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('overview', this)">
+    <span class="tab-icon">⚡</span>
+    <span>ОБЗОР</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('agents', this)">
+    <span class="tab-icon">🤖</span>
+    <span>АГЕНТЫ</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('analytics', this)">
+    <span class="tab-icon">📊</span>
+    <span>АНАЛИТИКА</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('projects', this)">
+    <span class="tab-icon">📁</span>
+    <span>ПРОЕКТЫ</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('timeline', this)">
+    <span class="tab-icon">📅</span>
+    <span>ТАЙМЛАЙН</span>
+  </button>
+</div>
+
+<script>
+// ── TELEGRAM WEBAPP INIT ──
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#050507');
+  tg.setBackgroundColor('#050507');
+  if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+}
+
+// ── DATA ──
+const PROJECTS = [
+  { name: "Бот фактур", emoji: "📋", status: "done", progress: 100, business: "Ресторан", tasks: "8/8" },
+  { name: "Финансовый директор", emoji: "🎩", status: "active", progress: 75, business: "Ресторан", tasks: "6/8" },
+  { name: "POSbistro интеграция", emoji: "🔗", status: "done", progress: 100, business: "Ресторан", tasks: "3/3" },
+  { name: "Telegram Mini App", emoji: "📱", status: "active", progress: 60, business: "Все", tasks: "4/7" },
+  { name: "Оптимизация штата", emoji: "👥", status: "todo", progress: 0, business: "Ресторан", tasks: "0/5" },
+  { name: "План продаж официантов", emoji: "📊", status: "done", progress: 100, business: "Ресторан", tasks: "4/4" },
+  { name: "Watchdog мониторинг", emoji: "🐕", status: "done", progress: 100, business: "Все", tasks: "1/1" },
+  { name: "Google Workspace (gog)", emoji: "📧", status: "blocked", progress: 10, business: "Все", tasks: "1/5" },
+  { name: "ChatGPT интеграция", emoji: "🧠", status: "blocked", progress: 5, business: "Все", tasks: "0/3" }
+];
+
+const TIMELINE = [
+  { date: "22.03.2026", event: "Mini App задеплоен на GitHub Pages", type: "launch" },
+  { date: "22.03.2026", event: "OpenAI ChatGPT OAuth подключён", type: "milestone" },
+  { date: "22.03.2026", event: "Watchdog мониторинг ботов", type: "feature" },
+  { date: "22.03.2026", event: "План продаж для официантов запущен", type: "feature" },
+  { date: "22.03.2026", event: "POSbistro автоматический скрапер запущен", type: "launch" },
+  { date: "22.03.2026", event: "Финансовый директор бот создан (@panas_findir_bot)", type: "launch" },
+  { date: "21.03.2026", event: "Финансовая модель: безубыточность, 3 уровня прибыли", type: "milestone" },
+  { date: "21.03.2026", event: "Анализ загрузки по часам и дням (2025)", type: "analysis" },
+  { date: "21.03.2026", event: "Бот фактур запущен (@didpanas_boss_bot)", type: "launch" },
+  { date: "21.03.2026", event: "Голосовые сообщения: Whisper + Edge TTS", type: "feature" },
+  { date: "21.03.2026", event: "Гермес родился ⚡", type: "milestone" }
+];
+
+const WEEKDAYS = [
+  { day: "ПН", val: 2904 },
+  { day: "ВТ", val: 3350 },
+  { day: "СР", val: 3010 },
+  { day: "ЧТ", val: 3137 },
+  { day: "ПТ", val: 4722 },
+  { day: "СБ", val: 8100 },
+  { day: "ВС", val: 6433 }
+];
+
+// ── MONTHLY FINANCIAL DATA ──
+const MONTHS_DATA = [
+  { key: "2026-01", label: "ЯНВАРЬ 2026", revenue: 123893, receipts: 626, days: 31 },
+  { key: "2026-02", label: "ФЕВРАЛЬ 2026", revenue: 141662, receipts: 644, days: 28 },
+  { key: "2026-03", label: "МАРТ 2026", revenue: 104553, receipts: 539, days: 31, partial: true, partialDays: 22, partialRevenue: 104553, partialReceipts: 539 }
+];
+// March is partial — showing projected full month as default, actual in note
+const FOT_TOTAL = 58737;
+const SEATS = 40;
+const STAFF_COUNT = 11;
+let currentMonthIdx = MONTHS_DATA.length - 1;
+
+function formatNum(n) {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+function renderFinance() {
+  const m = MONTHS_DATA[currentMonthIdx];
+  const prev = currentMonthIdx > 0 ? MONTHS_DATA[currentMonthIdx - 1] : null;
+
+  // Revenue
+  const rev = m.partial ? m.partialRevenue : m.revenue;
+  const revLabel = m.partial ? formatNum(rev) + " PLN (" + m.partialDays + " дн.)" : formatNum(m.revenue) + " PLN";
+  document.getElementById('fin-revenue').textContent = revLabel;
+
+  // Delta vs previous
+  const deltaEl = document.getElementById('fin-delta');
+  if (prev) {
+    const prevRev = prev.revenue;
+    const curFull = m.partial ? (m.partialRevenue / m.partialDays * m.days) : m.revenue;
+    const delta = ((curFull - prevRev) / prevRev * 100);
+    const sign = delta >= 0 ? "+" : "";
+    deltaEl.textContent = sign + delta.toFixed(1) + "% (" + formatNum(Math.round(curFull)) + " прогноз)";
+    deltaEl.className = "stat-value " + (delta >= 0 ? "delta-up" : "delta-down");
+  } else {
+    deltaEl.textContent = "—";
+    deltaEl.className = "stat-value delta-neutral";
+  }
+
+  // Avg check
+  const receipts = m.partial ? m.partialReceipts : m.receipts;
+  const avgCheck = rev / receipts;
+  document.getElementById('fin-avg-check').textContent = avgCheck.toFixed(0) + " PLN";
+
+  // Receipts
+  const rcpLabel = m.partial ? receipts + " (" + m.partialDays + " дн.)" : receipts.toString();
+  document.getElementById('fin-receipts').textContent = rcpLabel;
+
+  // FOT %
+  const fotPct = FOT_TOTAL / rev * 100;
+  const fotEl = document.getElementById('fin-fot-pct');
+  fotEl.textContent = fotPct.toFixed(1) + "%";
+  fotEl.className = "stat-value " + (fotPct > 40 ? "red" : fotPct > 35 ? "gold" : "green");
+
+  // Occupancy (rough: receipts * 1.77 guests/receipt avg from 2025 data: 14197/8022)
+  const guestsPerReceipt = 1.77;
+  const estGuests = receipts * guestsPerReceipt;
+  const daysUsed = m.partial ? m.partialDays : m.days;
+  const guestsPerDay = estGuests / daysUsed;
+  const occPct = guestsPerDay / SEATS * 100;
+  const occEl = document.getElementById('fin-occupancy');
+  occEl.textContent = occPct.toFixed(0) + "% (" + guestsPerDay.toFixed(0) + " гост/день)";
+  occEl.className = "stat-value " + (occPct >= 100 ? "green" : occPct >= 80 ? "cyan" : "gold");
+
+  // Revenue per employee
+  const revPerEmp = rev / STAFF_COUNT;
+  document.getElementById('fin-per-employee').textContent = formatNum(Math.round(revPerEmp)) + " PLN";
+
+  // Month label
+  document.getElementById('month-label').textContent = m.label;
+
+  // Disable buttons
+  document.getElementById('month-prev').disabled = (currentMonthIdx === 0);
+  document.getElementById('month-next').disabled = (currentMonthIdx === MONTHS_DATA.length - 1);
+}
+
+function changeMonth(dir) {
+  const newIdx = currentMonthIdx + dir;
+  if (newIdx >= 0 && newIdx < MONTHS_DATA.length) {
+    currentMonthIdx = newIdx;
+    renderFinance();
+  }
+}
+
+const ACTIVITY = [45, 78, 62, 90, 55, 38, 85]; // arbitrary activity % for last 7 days
+const ACTIVITY_LABELS = ["ВС", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"];
+
+const STATUS_LABELS = {
+  done: "ГОТОВО", active: "АКТИВЕН", todo: "ОЖИДАНИЕ", blocked: "ЗАБЛОК."
+};
+
+const STATUS_COLORS = {
+  done: "var(--green)", active: "var(--cyan)", todo: "var(--gold)", blocked: "var(--red)"
+};
+
+const PROGRESS_CLASSES = {
+  done: "green", active: "cyan", todo: "gold", blocked: "red"
+};
+
+// ── RENDER PROJECTS ──
+function renderProjects() {
+  const container = document.getElementById('projects-list');
+  container.innerHTML = PROJECTS.map(p => `
+    <div class="project-card">
+      <div class="project-head">
+        <div class="project-name-wrap">
+          <span class="project-emoji">${p.emoji}</span>
+          <span class="project-name">${p.name}</span>
+        </div>
+        <span class="badge ${p.status}">
+          <span class="badge-dot"></span>${STATUS_LABELS[p.status]}
+        </span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span class="project-biz">${p.business}</span>
+        <span class="project-tasks" style="color:${STATUS_COLORS[p.status]}">${p.tasks}</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill ${PROGRESS_CLASSES[p.status]}" style="width:${p.progress}%"></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:4px">
+        <span style="font-family:'Orbitron',sans-serif;font-size:9px;color:var(--text-dim)">${p.progress}%</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── RENDER TIMELINE ──
+function renderTimeline() {
+  const container = document.getElementById('timeline-list');
+  const typeLabels = { launch: "ЗАПУСК", milestone: "ВЕХА", analysis: "АНАЛИЗ", feature: "ФИЧА" };
+  container.innerHTML = TIMELINE.map(t => `
+    <div class="tl-item">
+      <div class="tl-dot ${t.type}"><div class="tl-dot-inner"></div></div>
+      <div class="tl-date">${t.date}</div>
+      <div class="tl-event">${t.event}</div>
+      <span class="tl-type-badge type-${t.type}">${typeLabels[t.type] || t.type}</span>
+    </div>
+  `).join('');
+}
+
+// ── RENDER DAY BARS ──
+function renderDayBars() {
+  const maxVal = Math.max(...WEEKDAYS.map(d => d.val));
+  const container = document.getElementById('day-bars');
+  container.innerHTML = WEEKDAYS.map(d => {
+    const pct = Math.round((d.val / maxVal) * 100);
+    const isWeekend = d.day === "СБ" || d.day === "ВС";
+    return `
+      <div class="day-bar-row">
+        <span class="day-name">${d.day}</span>
+        <div class="day-bar-wrap">
+          <div class="day-bar-fill ${isWeekend ? 'weekend' : 'weekday'}" style="width:${pct}%"></div>
+        </div>
+        <span class="day-bar-val">${d.val.toLocaleString('ru')}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── RENDER ACTIVITY BARS ──
+function renderActivityBars() {
+  const container = document.getElementById('activity-bars');
+  const maxH = 40;
+  container.innerHTML = ACTIVITY.map((v, i) => {
+    const h = Math.round((v / 100) * maxH);
+    const isHigh = v > 70;
+    return `
+      <div class="act-bar-wrap">
+        <div class="act-bar ${isHigh ? 'gold-bar' : 'cyan-bar'}" style="height:${h}px"></div>
+        <div class="act-label">${ACTIVITY_LABELS[i]}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById('tab-' + name);
+  if (target) target.classList.add('active');
+  if (btn) btn.classList.add('active');
+  // haptic feedback
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+// ── HUD CANVAS ──
+function initHudCanvas() {
+  const canvas = document.getElementById('hud-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const circles = Array.from({ length: 6 }, (_, i) => ({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    r: 60 + i * 40,
+    speed: 0.003 + Math.random() * 0.004,
+    phase: Math.random() * Math.PI * 2,
+    color: i % 2 === 0 ? '#ffc107' : '#00e5ff',
+    dashOffset: 0,
+    dashLen: 8 + i * 4,
+    gap: 12 + i * 3
+  }));
+
+  const lines = Array.from({ length: 5 }, () => ({
+    x1: Math.random() * window.innerWidth,
+    y1: Math.random() * window.innerHeight,
+    x2: Math.random() * window.innerWidth,
+    y2: Math.random() * window.innerHeight,
+    alpha: 0.05 + Math.random() * 0.1,
+    color: Math.random() > 0.5 ? '#ffc107' : '#00e5ff'
+  }));
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frame++;
+
+    // grid
+    ctx.strokeStyle = 'rgba(0,229,255,0.04)';
+    ctx.lineWidth = 0.5;
+    const spacing = 60;
+    for (let x = 0; x < canvas.width; x += spacing) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += spacing) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+
+    // rotating circles
+    circles.forEach(c => {
+      c.dashOffset -= c.speed * 2;
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.phase + frame * c.speed * 0.1);
+      ctx.strokeStyle = c.color;
+      ctx.lineWidth = 0.6;
+      ctx.globalAlpha = 0.35;
+      ctx.setLineDash([c.dashLen, c.gap]);
+      ctx.lineDashOffset = c.dashOffset;
+      ctx.beginPath();
+      ctx.arc(0, 0, c.r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    });
+
+    // static lines
+    lines.forEach(l => {
+      ctx.strokeStyle = l.color;
+      ctx.lineWidth = 0.4;
+      ctx.globalAlpha = l.alpha;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(l.x1, l.y1);
+      ctx.lineTo(l.x2, l.y2);
+      ctx.stroke();
+    });
+
+    ctx.globalAlpha = 1;
+    ctx.setLineDash([]);
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  renderFinance();
+  renderProjects();
+  renderTimeline();
+  renderDayBars();
+  renderActivityBars();
+  initHudCanvas();
+});
+</script>
+</body>
+</html>
