@@ -466,6 +466,10 @@
   .agent-card.green-accent .agent-name { color: var(--green); }
   .agent-card.purple-accent::before { background: var(--purple); box-shadow: 2px 0 12px rgba(171,71,188,0.4); }
   .agent-card.purple-accent .agent-name { color: var(--purple); }
+  .agent-card.orange-accent::before { background: #ff9800; box-shadow: 2px 0 12px rgba(255,152,0,0.4); }
+  .agent-card.orange-accent .agent-name { color: #ff9800; }
+  .agent-card.blue-accent::before { background: #42a5f5; box-shadow: 2px 0 12px rgba(66,165,245,0.4); }
+  .agent-card.blue-accent .agent-name { color: #42a5f5; }
   .agent-avatar.purple-av { background: rgba(171,71,188,0.1); }
 
   .agent-role { font-size: 11px; color: var(--text-dim); margin-bottom: 2px; }
@@ -856,6 +860,8 @@
   .agent-card.gold-accent:hover  { border-color: rgba(255,193,7,0.3); }
   .agent-card.cyan-accent:hover  { border-color: rgba(0,229,255,0.3); }
   .agent-card.green-accent:hover { border-color: rgba(102,187,106,0.3); }
+  .agent-card.orange-accent:hover { border-color: rgba(255,152,0,0.3); }
+  .agent-card.blue-accent:hover { border-color: rgba(66,165,245,0.3); }
 
   /* number counter animation */
   .count-up { display: inline-block; }
@@ -953,7 +959,7 @@
     <span><span class="status-dot"></span></span>
     <span class="status-item">ONLINE</span>
     <span>·</span>
-    <span class="status-item">АГЕНТОВ: <span>4</span></span>
+    <span class="status-item">АГЕНТОВ: <span>6</span></span>
     <span>·</span>
     <span class="status-item">ПРОЕКТОВ: <span>10</span></span>
   </div>
@@ -1146,6 +1152,60 @@
         <span class="cap-tag">Напоминания об оплате</span>
         <span class="cap-tag">Контроль просрочек</span>
         <span class="cap-tag">Дубликаты</span>
+      </div>
+    </div>
+
+    <!-- ПРОДЮСЕР ЭКСПЕРТОВ -->
+    <div class="agent-card orange-accent">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(255,152,0,0.15);color:#ff9800">🎬</div>
+        <div class="agent-info">
+          <div class="agent-name">ПРОДЮСЕР ЭКСПЕРТОВ</div>
+          <div class="agent-role">13 AI-агентов для продюсирования</div>
+          <div class="agent-bot">@prod_expt_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Комплекс AI-агентов для продюсирования онлайн-экспертов</div>
+      <div class="agent-model"><span class="model-dot" style="background:#ff9800"></span>Claude Sonnet 4</div>
+      <div class="caps-label">АГЕНТЫ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Стратег запуска</span>
+        <span class="cap-tag">Копирайтер</span>
+        <span class="cap-tag">Маркетолог</span>
+        <span class="cap-tag">Скриптолог</span>
+        <span class="cap-tag">Методолог</span>
+        <span class="cap-tag">Воронки</span>
+        <span class="cap-tag">Аналитик</span>
+        <span class="cap-tag">Контент</span>
+        <span class="cap-tag">Ценообразование</span>
+        <span class="cap-tag">SMM</span>
+        <span class="cap-tag">Ресёрч</span>
+        <span class="cap-tag">Техспец</span>
+        <span class="cap-tag">Юрист</span>
+      </div>
+    </div>
+
+    <!-- ЕГОР ПЫРИКОВ / МЕНТОР -->
+    <div class="agent-card blue-accent">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(66,165,245,0.15);color:#42a5f5">🧠</div>
+        <div class="agent-info">
+          <div class="agent-name">ЕГОР ПЫРИКОВ</div>
+          <div class="agent-role">AI-клон ментора / Со-продюсер</div>
+          <div class="agent-bot">@online_egorpyrikov_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">AI-клон Егора Пырикова — ментор по продюсированию</div>
+      <div class="agent-model"><span class="model-dot" style="background:#42a5f5"></span>Claude Sonnet 4</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Менторинг</span>
+        <span class="cap-tag">Стратегия запусков</span>
+        <span class="cap-tag">Разбор кейсов</span>
+        <span class="cap-tag">База знаний</span>
+        <span class="cap-tag">Диалоговый AI</span>
       </div>
     </div>
 
