@@ -781,6 +781,7 @@
   .tl-dot.milestone{ border-color: var(--gold);  background: rgba(255,193,7,0.15); }
   .tl-dot.analysis { border-color: var(--purple); background: rgba(171,71,188,0.15); }
   .tl-dot.feature  { border-color: var(--green); background: rgba(102,187,106,0.15); }
+  .tl-dot.task     { border-color: #ff9800; background: rgba(255,152,0,0.15); }
 
   .tl-dot-inner {
     width: 4px; height: 4px;
@@ -791,6 +792,7 @@
   .tl-dot.milestone .tl-dot-inner { background: var(--gold); box-shadow: 0 0 4px var(--gold); }
   .tl-dot.analysis  .tl-dot-inner { background: var(--purple); }
   .tl-dot.feature   .tl-dot-inner { background: var(--green); }
+  .tl-dot.task      .tl-dot-inner { background: #ff9800; box-shadow: 0 0 4px #ff9800; }
 
   .tl-date {
     font-family: 'Orbitron', sans-serif;
@@ -1452,14 +1454,24 @@ const PROJECTS = [
 ];
 
 const TIMELINE = [
+  // ── ПЛАН НА 23.03.2026 ──
+  { date: "23.03.2026", event: "☀️ Собрать данные по 3 экспертам (фикс, %, доход)", type: "task" },
+  { date: "23.03.2026", event: "🔥 Создать бот-мотиватор «Внутренний Огонь»", type: "task" },
+  { date: "23.03.2026", event: "📝 Загрузить конспект Егора в ментор-бота", type: "task" },
+  { date: "23.03.2026", event: "🔗 Подключить Todoist", type: "task" },
+  { date: "23.03.2026", event: "📐 Прислать площадь ресторана → выручка/кв.м", type: "task" },
+  // ── 22.03.2026 ──
+  { date: "22.03.2026", event: "Продюсер-бот: 13 AI-агентов (@prod_expt_bot)", type: "launch" },
+  { date: "22.03.2026", event: "Ментор-бот: AI Егор Пыриков (@online_egorpyrikov_bot)", type: "launch" },
+  { date: "22.03.2026", event: "Оптимизация штата: бригады, ставки, анализ", type: "analysis" },
+  { date: "22.03.2026", event: "Операционные KPI: загрузка, выручка/работник", type: "analysis" },
+  { date: "22.03.2026", event: "Дашборд: финансы по месяцам + 6 агентов", type: "feature" },
   { date: "22.03.2026", event: "Mini App задеплоен на GitHub Pages", type: "launch" },
   { date: "22.03.2026", event: "OpenAI ChatGPT OAuth подключён", type: "milestone" },
   { date: "22.03.2026", event: "Watchdog мониторинг ботов", type: "feature" },
-  { date: "22.03.2026", event: "План продаж для официантов запущен", type: "feature" },
   { date: "22.03.2026", event: "POSbistro автоматический скрапер запущен", type: "launch" },
   { date: "22.03.2026", event: "Финансовый директор бот создан (@panas_findir_bot)", type: "launch" },
   { date: "21.03.2026", event: "Финансовая модель: безубыточность, 3 уровня прибыли", type: "milestone" },
-  { date: "21.03.2026", event: "Анализ загрузки по часам и дням (2025)", type: "analysis" },
   { date: "21.03.2026", event: "Бот фактур запущен (@didpanas_boss_bot)", type: "launch" },
   { date: "21.03.2026", event: "Голосовые сообщения: Whisper + Edge TTS", type: "feature" },
   { date: "21.03.2026", event: "Гермес родился ⚡", type: "milestone" }
