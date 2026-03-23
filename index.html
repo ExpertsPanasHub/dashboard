@@ -470,6 +470,8 @@
   .agent-card.orange-accent .agent-name { color: #ff9800; }
   .agent-card.blue-accent::before { background: #42a5f5; box-shadow: 2px 0 12px rgba(66,165,245,0.4); }
   .agent-card.blue-accent .agent-name { color: #42a5f5; }
+  .agent-card.fire-accent::before { background: #ff5722; box-shadow: 2px 0 12px rgba(255,87,34,0.4); }
+  .agent-card.fire-accent .agent-name { color: #ff5722; }
   .agent-avatar.purple-av { background: rgba(171,71,188,0.1); }
 
   .agent-role { font-size: 11px; color: var(--text-dim); margin-bottom: 2px; }
@@ -864,6 +866,7 @@
   .agent-card.green-accent:hover { border-color: rgba(102,187,106,0.3); }
   .agent-card.orange-accent:hover { border-color: rgba(255,152,0,0.3); }
   .agent-card.blue-accent:hover { border-color: rgba(66,165,245,0.3); }
+  .agent-card.fire-accent:hover { border-color: rgba(255,87,34,0.3); }
 
   /* number counter animation */
   .count-up { display: inline-block; }
@@ -961,7 +964,7 @@
     <span><span class="status-dot"></span></span>
     <span class="status-item">ONLINE</span>
     <span>·</span>
-    <span class="status-item">АГЕНТОВ: <span>6</span></span>
+    <span class="status-item">АГЕНТОВ: <span>7</span></span>
     <span>·</span>
     <span class="status-item">ПРОЕКТОВ: <span>10</span></span>
   </div>
@@ -1211,6 +1214,29 @@
       </div>
     </div>
 
+    <!-- МОТИВАТОР -->
+    <div class="agent-card fire-accent">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(255,87,34,0.15);color:#ff5722">🔥</div>
+        <div class="agent-info">
+          <div class="agent-name">ВНУТРЕННИЙ ОГОНЬ</div>
+          <div class="agent-role">Персональный мотиватор / Коуч</div>
+          <div class="agent-bot">@motivator_couch_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Персональный мотиватор с реальными цифрами и прогрессом</div>
+      <div class="agent-model"><span class="model-dot" style="background:#ff5722"></span>Claude Sonnet 4</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Утренний пуш</span>
+        <span class="cap-tag">Вечерний итог</span>
+        <span class="cap-tag">Прогресс к цели</span>
+        <span class="cap-tag">Финансовая интеграция</span>
+        <span class="cap-tag">Психология</span>
+      </div>
+    </div>
+
     <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
     <div class="agent-card purple-accent">
       <div class="agent-head">
@@ -1446,7 +1472,10 @@ const PROJECTS = [
   { name: "Финансовый директор", emoji: "🎩", status: "active", progress: 75, business: "Ресторан", tasks: "6/8" },
   { name: "POSbistro интеграция", emoji: "🔗", status: "done", progress: 100, business: "Ресторан", tasks: "3/3" },
   { name: "Telegram Mini App", emoji: "📱", status: "active", progress: 60, business: "Все", tasks: "4/7" },
-  { name: "Оптимизация штата", emoji: "👥", status: "todo", progress: 0, business: "Ресторан", tasks: "0/5" },
+  { name: "Оптимизация штата", emoji: "👥", status: "active", progress: 80, business: "Ресторан", tasks: "4/5" },
+  { name: "Бот-мотиватор", emoji: "🔥", status: "done", progress: 100, business: "Личное", tasks: "3/3" },
+  { name: "Ментор Пыриков", emoji: "🧠", status: "active", progress: 40, business: "Продюсирование", tasks: "2/5" },
+  { name: "Продюсер-бот (13 агентов)", emoji: "🎬", status: "done", progress: 100, business: "Продюсирование", tasks: "5/5" },
   { name: "План продаж официантов", emoji: "📊", status: "done", progress: 100, business: "Ресторан", tasks: "4/4" },
   { name: "Watchdog мониторинг", emoji: "🐕", status: "done", progress: 100, business: "Все", tasks: "1/1" },
   { name: "Google Workspace (gog)", emoji: "📧", status: "blocked", progress: 10, business: "Все", tasks: "1/5" },
@@ -1454,12 +1483,12 @@ const PROJECTS = [
 ];
 
 const TIMELINE = [
-  // ── ПЛАН НА 23.03.2026 ──
-  { date: "23.03.2026", event: "☀️ Собрать данные по 3 экспертам (фикс, %, доход)", type: "task" },
-  { date: "23.03.2026", event: "🔥 Создать бот-мотиватор «Внутренний Огонь»", type: "task" },
-  { date: "23.03.2026", event: "📝 Загрузить конспект Егора в ментор-бота", type: "task" },
+  // ── 23.03.2026 ──
+  { date: "23.03.2026", event: "Бот-мотиватор «Внутренний Огонь» запущен (@motivator_couch_bot)", type: "launch" },
+  { date: "23.03.2026", event: "Транскрипт Егора загружен в ментор-бота (96К символов)", type: "feature" },
+  { date: "23.03.2026", event: "Данные 3 экспертов: Татьяна, Оксана, Алексей", type: "milestone" },
   { date: "23.03.2026", event: "🔗 Подключить Todoist", type: "task" },
-  { date: "23.03.2026", event: "📐 Прислать площадь ресторана → выручка/кв.м", type: "task" },
+  { date: "23.03.2026", event: "📐 Площадь ресторана → выручка/кв.м", type: "task" },
   // ── 22.03.2026 ──
   { date: "22.03.2026", event: "Продюсер-бот: 13 AI-агентов (@prod_expt_bot)", type: "launch" },
   { date: "22.03.2026", event: "Ментор-бот: AI Егор Пыриков (@online_egorpyrikov_bot)", type: "launch" },
@@ -1491,7 +1520,7 @@ const WEEKDAYS = [
 const MONTHS_DATA = [
   { key: "2026-01", label: "ЯНВАРЬ 2026", revenue: 123893, receipts: 626, days: 31 },
   { key: "2026-02", label: "ФЕВРАЛЬ 2026", revenue: 141662, receipts: 644, days: 28 },
-  { key: "2026-03", label: "МАРТ 2026", revenue: 104553, receipts: 539, days: 31, partial: true, partialDays: 22, partialRevenue: 104553, partialReceipts: 539 }
+  { key: "2026-03", label: "МАРТ 2026", revenue: 108587, receipts: 561, days: 31, partial: true, partialDays: 22, partialRevenue: 108587, partialReceipts: 561 }
 ];
 // March is partial — showing projected full month as default, actual in note
 const FOT_TOTAL = 58737;
