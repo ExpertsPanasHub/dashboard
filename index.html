@@ -1077,12 +1077,37 @@
         </div>
         <div class="sys-row">
           <div class="sys-indicator online"></div>
-          <div class="sys-label">ФИН. ДИР.</div>
+          <div class="sys-label">ФИН. ДИРЕКТОР</div>
           <div class="sys-val">ACTIVE</div>
         </div>
         <div class="sys-row">
           <div class="sys-indicator online"></div>
           <div class="sys-label">БОТ ФАКТУР</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">ПРОДЮСЕР</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">МЕНТОР</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">МОТИВАТОР</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">GMB СПЕЦИАЛИСТ</div>
+          <div class="sys-val">ACTIVE</div>
+        </div>
+        <div class="sys-row">
+          <div class="sys-indicator online"></div>
+          <div class="sys-label">МОНИТОР</div>
           <div class="sys-val">ACTIVE</div>
         </div>
         <div class="sys-row">
@@ -1143,8 +1168,10 @@
       <div class="caps-list">
         <span class="cap-tag">P&amp;L анализ</span>
         <span class="cap-tag">Точка безубыточности</span>
-        <span class="cap-tag">Уровни прибыли</span>
+        <span class="cap-tag">Зарплаты / Payroll</span>
+        <span class="cap-tag">ZUS трекинг</span>
         <span class="cap-tag">POSbistro интеграция</span>
+        <span class="cap-tag">Стоп-лист / Топ продаж</span>
         <span class="cap-tag">Автоотчёты</span>
       </div>
     </div>
@@ -1245,6 +1272,53 @@
         <span class="cap-tag">Прогресс к цели</span>
         <span class="cap-tag">Финансовая интеграция</span>
         <span class="cap-tag">Психология</span>
+      </div>
+    </div>
+
+    <!-- GMB СПЕЦИАЛИСТ -->
+    <div class="agent-card" style="--accent-color:#EA4335">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(234,67,53,0.15);color:#EA4335">📍</div>
+        <div class="agent-info">
+          <div class="agent-name" style="color:#EA4335">GMB СПЕЦИАЛИСТ</div>
+          <div class="agent-role">Google Maps / Локальный маркетинг</div>
+          <div class="agent-bot">@gmb_agent_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Универсальный эксперт по продвижению в Google Maps</div>
+      <div class="agent-model"><span class="model-dot" style="background:#EA4335"></span>Claude Sonnet 4</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Аудит профиля</span>
+        <span class="cap-tag">Работа с отзывами</span>
+        <span class="cap-tag">Контент для GMB</span>
+        <span class="cap-tag">Local SEO</span>
+        <span class="cap-tag">Чеклисты</span>
+        <span class="cap-tag">Анализ конкурентов</span>
+        <span class="cap-tag">Пакетные услуги</span>
+      </div>
+    </div>
+
+    <!-- МОНИТОР АГЕНТОВ -->
+    <div class="agent-card" style="--accent-color:#78909c">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(120,144,156,0.15);color:#78909c">🛡</div>
+        <div class="agent-info">
+          <div class="agent-name" style="color:#78909c">МОНИТОР</div>
+          <div class="agent-role">Контроль работоспособности агентов</div>
+          <div class="agent-bot">@sanches_monitor_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Автоматический мониторинг, перезапуск и уведомления</div>
+      <div class="agent-model"><span class="model-dot" style="background:#78909c"></span>Python / APScheduler</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Проверка каждый час</span>
+        <span class="cap-tag">Автоперезапуск</span>
+        <span class="cap-tag">Алерты в Telegram</span>
+        <span class="cap-tag">Просмотр логов</span>
       </div>
     </div>
 
@@ -1488,12 +1562,27 @@ const PROJECTS = [
   { name: "Ментор Пыриков", emoji: "🧠", status: "active", progress: 40, business: "Продюсирование", tasks: "2/5" },
   { name: "Продюсер-бот (13 агентов)", emoji: "🎬", status: "done", progress: 100, business: "Продюсирование", tasks: "5/5" },
   { name: "План продаж официантов", emoji: "📊", status: "done", progress: 100, business: "Ресторан", tasks: "4/4" },
+  { name: "Payroll / Зарплаты", emoji: "💰", status: "done", progress: 100, business: "Ресторан", tasks: "5/5" },
+  { name: "ZUS трекинг", emoji: "📋", status: "done", progress: 100, business: "Ресторан", tasks: "2/2" },
+  { name: "GMB бот", emoji: "📍", status: "done", progress: 100, business: "GMB", tasks: "8/8" },
+  { name: "Монитор агентов", emoji: "🛡", status: "done", progress: 100, business: "Все", tasks: "4/4" },
+  { name: "OAuth миграция", emoji: "🔐", status: "done", progress: 100, business: "Все", tasks: "6/6" },
   { name: "Watchdog мониторинг", emoji: "🐕", status: "done", progress: 100, business: "Все", tasks: "1/1" },
   { name: "Google Workspace (gog)", emoji: "📧", status: "blocked", progress: 10, business: "Все", tasks: "1/5" },
   { name: "ChatGPT интеграция", emoji: "🧠", status: "blocked", progress: 5, business: "Все", tasks: "0/3" }
 ];
 
 const TIMELINE = [
+  // ── 24.03.2026 ──
+  { date: "24.03.2026", event: "Монитор агентов запущен (@sanches_monitor_bot)", type: "launch" },
+  { date: "24.03.2026", event: "GMB Специалист — отдельный бот (@gmb_agent_bot)", type: "launch" },
+  { date: "24.03.2026", event: "Все боты переключены на OAuth (без API ключей)", type: "milestone" },
+  { date: "24.03.2026", event: "Зарплатный модуль: /payroll, /salary, /paylog", type: "feature" },
+  { date: "24.03.2026", event: "ZUS трекинг: /zus, /zuspay", type: "feature" },
+  { date: "24.03.2026", event: "Стоп-лист и Топ продаж — автопарсинг в группе", type: "feature" },
+  { date: "24.03.2026", event: "Настройки фин. модели: /settings, /set", type: "feature" },
+  { date: "24.03.2026", event: "Парсер индивидуальных ведомостей (Pasek/Rachunek)", type: "feature" },
+  { date: "24.03.2026", event: "Смысловик — новый агент /meanings в продюсер-боте", type: "feature" },
   // ── 23.03.2026 ──
   { date: "23.03.2026", event: "Бот-мотиватор «Внутренний Огонь» запущен (@motivator_couch_bot)", type: "launch" },
   { date: "23.03.2026", event: "Транскрипт Егора загружен в ментор-бота (96К символов)", type: "feature" },
