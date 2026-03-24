@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Продюсер — Дашборд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg: #050507;
+  --bg2: #080810;
+  --bg3: #0d0d1a;
+  --gold: #ffc107;
+  --cyan: #00e5ff;
+  --red: #e53935;
+  --green: #66bb6a;
+  --orange: #ff9800;
+  --purple: #ab47bc;
+  --blue: #42a5f5;
+  --card: rgba(255,255,255,0.03);
+  --card-border: rgba(255,255,255,0.07);
+  --text: #e0e0e0;
+  --text-dim: #7a8090;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; min-height:100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  overflow-x: hidden;
+}
+
+body::after {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+}
+
+.container { max-width:480px; margin:0 auto; padding:16px; }
+
+/* Header */
+.header {
+  text-align:center; padding:20px 0 10px;
+}
+.header-title {
+  font-family:'Orbitron',sans-serif; font-size:18px; font-weight:700;
+  color:var(--orange); letter-spacing:2px;
+  text-shadow: 0 0 20px rgba(255,152,0,0.5);
+}
+.header-sub { font-size:11px; color:var(--text-dim); margin-top:4px; }
+
+/* Section */
+.section-header { display:flex; align-items:center; gap:10px; margin:24px 0 12px; }
+.section-title {
+  font-family:'Orbitron',sans-serif; font-size:11px; font-weight:600;
+  color:var(--orange); letter-spacing:2px; white-space:nowrap;
+}
+.section-line { flex:1; height:1px; background:linear-gradient(90deg,rgba(255,152,0,0.4),transparent); }
+
+/* Goal card */
+.goal-card {
+  background:var(--card); border:1px solid var(--card-border); border-radius:12px;
+  padding:16px; margin-bottom:16px;
+}
+.goal-label { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+.goal-amount {
+  font-family:'Orbitron',sans-serif; font-size:28px; font-weight:700;
+  color:var(--gold); margin:6px 0;
+}
+.goal-target { font-size:12px; color:var(--text-dim); }
+.goal-bar-wrap {
+  width:100%; height:8px; background:rgba(255,255,255,0.05); border-radius:4px;
+  margin-top:10px; overflow:hidden;
+}
+.goal-bar {
+  height:100%; border-radius:4px; transition:width 0.5s;
+  background:linear-gradient(90deg, var(--orange), var(--gold));
+  box-shadow:0 0 10px rgba(255,193,7,0.4);
+}
+.goal-pct {
+  font-family:'Orbitron',sans-serif; font-size:11px; color:var(--gold);
+  margin-top:4px; text-align:right;
+}
+
+/* Month nav */
+.month-nav {
+  display:flex; align-items:center; justify-content:center; gap:16px; margin:16px 0;
+}
+.month-btn {
+  width:36px; height:36px; border-radius:8px; border:1px solid var(--card-border);
+  background:var(--card); color:var(--orange); font-size:18px;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.month-btn:active { background:rgba(255,152,0,0.1); }
+.month-label {
+  font-family:'Orbitron',sans-serif; font-size:14px; font-weight:600;
+  color:var(--text); letter-spacing:1px;
+}
+
+/* Expert card */
+.expert-card {
+  background:var(--card); border:1px solid var(--card-border); border-radius:12px;
+  padding:16px; margin-bottom:12px; position:relative; overflow:hidden;
+}
+.expert-card::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px;
+}
+.expert-card.tatyana::before { background:var(--purple); }
+.expert-card.oksana::before { background:var(--green); }
+.expert-card.alexey::before { background:var(--blue); }
+
+.expert-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.expert-name { font-family:'Orbitron',sans-serif; font-size:13px; font-weight:600; }
+.expert-card.tatyana .expert-name { color:var(--purple); }
+.expert-card.oksana .expert-name { color:var(--green); }
+.expert-card.alexey .expert-name { color:var(--blue); }
+.expert-niche { font-size:10px; color:var(--text-dim); }
+.expert-profit {
+  font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700;
+}
+
+/* Stat rows */
+.stat-row {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.stat-row:last-child { border-bottom:none; }
+.stat-label { font-size:12px; color:var(--text-dim); }
+.stat-val {
+  font-family:'Orbitron',sans-serif; font-size:12px; font-weight:600; color:var(--text);
+}
+.stat-val.green { color:var(--green); }
+.stat-val.red { color:var(--red); }
+.stat-val.gold { color:var(--gold); }
+.stat-val.cyan { color:var(--cyan); }
+.stat-val.orange { color:var(--orange); }
+
+/* Funnel */
+.funnel { margin-top:10px; }
+.funnel-step {
+  display:flex; align-items:center; gap:8px; margin-bottom:6px;
+}
+.funnel-bar-wrap {
+  flex:1; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;
+}
+.funnel-bar { height:100%; border-radius:3px; transition:width 0.4s; }
+.funnel-label { font-size:10px; color:var(--text-dim); min-width:80px; }
+.funnel-val { font-family:'Orbitron',sans-serif; font-size:10px; min-width:50px; text-align:right; }
+.funnel-pct { font-size:9px; color:var(--text-dim); min-width:35px; text-align:right; }
+
+/* Summary stats */
+.summary-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;
+}
+.summary-item {
+  background:var(--card); border:1px solid var(--card-border); border-radius:10px;
+  padding:12px; text-align:center;
+}
+.summary-label { font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+.summary-val {
+  font-family:'Orbitron',sans-serif; font-size:18px; font-weight:700; margin-top:4px;
+}
+
+/* No data */
+.no-data {
+  text-align:center; padding:20px; color:var(--text-dim); font-size:12px;
+  font-style:italic;
+}
+
+/* Tabs */
+.tabs {
+  display:flex; gap:0; margin-bottom:16px;
+  background:var(--card); border-radius:10px; overflow:hidden;
+  border:1px solid var(--card-border);
+}
+.tab {
+  flex:1; padding:10px 8px; text-align:center; cursor:pointer;
+  font-family:'Orbitron',sans-serif; font-size:9px; font-weight:600;
+  color:var(--text-dim); letter-spacing:1px; transition:all 0.2s;
+}
+.tab.active { background:rgba(255,152,0,0.15); color:var(--orange); }
+.tab:active { background:rgba(255,152,0,0.1); }
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+/* Pie legend */
+.pie-legend { display:flex; flex-direction:column; gap:6px; margin-top:10px; }
+.pie-item { display:flex; align-items:center; gap:8px; }
+.pie-dot { width:10px; height:10px; border-radius:50%; }
+.pie-name { font-size:12px; flex:1; }
+.pie-val { font-family:'Orbitron',sans-serif; font-size:12px; font-weight:600; }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-title">🎬 ПРОДЮСЕР</div>
+    <div class="header-sub">Дашборд продюсирования экспертов</div>
+  </div>
+
+  <!-- GOAL -->
+  <div class="goal-card">
+    <div class="goal-label">Моя прибыль · <span id="goal-month">МАРТ 2026</span></div>
+    <div class="goal-amount" id="goal-amount">0 zł</div>
+    <div class="goal-target">Цель: 70 000 zł / мес</div>
+    <div class="goal-bar-wrap"><div class="goal-bar" id="goal-bar" style="width:0%"></div></div>
+    <div class="goal-pct" id="goal-pct">0%</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" data-tab="overview">СВОДКА</div>
+    <div class="tab" data-tab="experts">ЭКСПЕРТЫ</div>
+    <div class="tab" data-tab="funnel">ВОРОНКИ</div>
+  </div>
+
+  <!-- TAB: OVERVIEW -->
+  <div class="tab-content active" id="tab-overview">
+
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-label">Выручка</div>
+        <div class="summary-val gold" id="total-revenue">0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Расходы</div>
+        <div class="summary-val red" id="total-costs">0</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">Гарантия (фиксы)</div>
+        <div class="summary-val cyan" id="total-fixed">9 324</div>
+      </div>
+      <div class="summary-item">
+        <div class="summary-label">ROI</div>
+        <div class="summary-val green" id="total-roi">—</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">РАСПРЕДЕЛЕНИЕ</div>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="expert-card tatyana">
+      <div class="expert-head">
+        <div>
+          <div class="expert-name">ТАТЬЯНА</div>
+          <div class="expert-niche">Видео контент · 50%</div>
+        </div>
+        <div class="expert-profit" id="profit-tatyana" style="color:var(--purple)">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Выручка</div>
+        <div class="stat-val" id="rev-tatyana">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Расходы</div>
+        <div class="stat-val" id="cost-tatyana">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Моя доля</div>
+        <div class="stat-val green" id="my-tatyana">—</div>
+      </div>
+    </div>
+
+    <div class="expert-card oksana">
+      <div class="expert-head">
+        <div>
+          <div class="expert-name">ОКСАНА</div>
+          <div class="expert-niche">Похудение · 4 884 zł + 35%</div>
+        </div>
+        <div class="expert-profit" id="profit-oksana" style="color:var(--green)">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Выручка</div>
+        <div class="stat-val" id="rev-oksana">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Расходы</div>
+        <div class="stat-val" id="cost-oksana">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Моя доля</div>
+        <div class="stat-val green" id="my-oksana">—</div>
+      </div>
+    </div>
+
+    <div class="expert-card alexey">
+      <div class="expert-head">
+        <div>
+          <div class="expert-name">АЛЕКСЕЙ</div>
+          <div class="expert-niche">Энерговолна · 4 440 zł + 35%</div>
+        </div>
+        <div class="expert-profit" id="profit-alexey" style="color:var(--blue)">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Выручка</div>
+        <div class="stat-val" id="rev-alexey">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Расходы</div>
+        <div class="stat-val" id="cost-alexey">—</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Моя доля</div>
+        <div class="stat-val green" id="my-alexey">—</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB: EXPERTS (detailed) -->
+  <div class="tab-content" id="tab-experts">
+
+    <div class="month-nav">
+      <div class="month-btn" id="prev-month">◀</div>
+      <div class="month-label" id="month-display">МАРТ 2026</div>
+      <div class="month-btn" id="next-month">▶</div>
+    </div>
+
+    <div id="experts-detail"></div>
+
+  </div>
+
+  <!-- TAB: FUNNEL -->
+  <div class="tab-content" id="tab-funnel">
+    <div id="funnels-container"></div>
+  </div>
+
+</div>
+
+<script>
+// ── Data (will be populated from bot API later) ──
+const EXPERTS = [
+  {
+    id: "tatyana", name: "Татьяна", niche: "Видео контент",
+    fixed: 0, share: 50, color: "#ab47bc", class: "tatyana",
+  },
+  {
+    id: "oksana", name: "Оксана", niche: "Похудение",
+    fixed: 4884, share: 35, color: "#66bb6a", class: "oksana",
+  },
+  {
+    id: "alexey", name: "Алексей", niche: "Энерговолна",
+    fixed: 4440, share: 35, color: "#42a5f5", class: "alexey",
+  },
+];
+
+const GOAL = 70000;
+
+// Sample data structure (empty — will be filled via /input in bot)
+let DATA = {};
+// DATA["2026-03"] = { tatyana: {revenue:0,...}, oksana: {...}, alexey: {...} }
+
+const MONTHS_RU = ["ЯНВАРЬ","ФЕВРАЛЬ","МАРТ","АПРЕЛЬ","МАЙ","ИЮНЬ","ИЮЛЬ","АВГУСТ","СЕНТЯБРЬ","ОКТЯБРЬ","НОЯБРЬ","ДЕКАБРЬ"];
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+
+function monthKey() { return `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`; }
+function monthLabel() { return `${MONTHS_RU[currentMonth]} ${currentYear}`; }
+
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return "—";
+  return Math.round(n).toLocaleString('ru-RU');
+}
+
+function calcExpert(exp, data) {
+  if (!data) return { revenue:0, costs:0, grossProfit:0, expertFixed:exp.fixed, expertShare:0, myProfit:0, margin:0, roi:0 };
+  const revenue = data.revenue || 0;
+  const costs = (data.cost_traffic||0) + (data.cost_production||0) + (data.cost_staff||0) + (data.cost_banking||0) + (data.cost_services||0);
+  const grossProfit = revenue - costs;
+  const netAfterFixed = grossProfit - exp.fixed;
+  const expertShare = netAfterFixed > 0 ? netAfterFixed * exp.share / 100 : 0;
+  const myProfit = netAfterFixed - expertShare;
+  const margin = revenue > 0 ? grossProfit / revenue * 100 : 0;
+  const roi = costs > 0 ? (revenue - costs) / costs * 100 : 0;
+  const romi = (data.cost_traffic||0) > 0 ? ((data.sales_amount||revenue) - (data.cost_traffic||0)) / (data.cost_traffic||0) * 100 : 0;
+  return { revenue, costs, grossProfit, expertFixed: exp.fixed, expertShare, myProfit, margin, roi, romi, ...data };
+}
+
+function render() {
+  const mk = monthKey();
+  const ml = monthLabel();
+  document.getElementById('month-display').textContent = ml;
+  document.getElementById('goal-month').textContent = ml;
+
+  const monthData = DATA[mk] || {};
+  let totalRevenue = 0, totalCosts = 0, totalMyProfit = 0;
+
+  EXPERTS.forEach(exp => {
+    const data = monthData[exp.id];
+    const calc = calcExpert(exp, data);
+    totalRevenue += calc.revenue;
+    totalCosts += calc.costs;
+    totalMyProfit += calc.myProfit;
+
+    // Overview cards
+    const hasData = calc.revenue > 0;
+    document.getElementById(`rev-${exp.id}`).textContent = hasData ? fmt(calc.revenue) + " zł" : "—";
+    document.getElementById(`cost-${exp.id}`).textContent = hasData ? fmt(calc.costs) + " zł" : "—";
+    document.getElementById(`my-${exp.id}`).textContent = hasData ? fmt(calc.myProfit) + " zł" : "—";
+    document.getElementById(`profit-${exp.id}`).textContent = hasData ? fmt(calc.myProfit) + " zł" : "—";
+  });
+
+  // Goal
+  document.getElementById('goal-amount').textContent = fmt(totalMyProfit) + " zł";
+  const pct = GOAL > 0 ? Math.min(100, totalMyProfit / GOAL * 100) : 0;
+  document.getElementById('goal-bar').style.width = pct + "%";
+  document.getElementById('goal-pct').textContent = pct.toFixed(1) + "%";
+
+  // Summary
+  document.getElementById('total-revenue').textContent = fmt(totalRevenue);
+  document.getElementById('total-costs').textContent = fmt(totalCosts);
+  const totalFixed = EXPERTS.reduce((s,e) => s + e.fixed, 0);
+  document.getElementById('total-fixed').textContent = fmt(totalFixed);
+  document.getElementById('total-roi').textContent = totalCosts > 0 ? ((totalRevenue - totalCosts) / totalCosts * 100).toFixed(0) + "%" : "—";
+
+  // Experts detail tab
+  renderExpertsDetail(mk, monthData);
+  renderFunnels(mk, monthData);
+}
+
+function renderExpertsDetail(mk, monthData) {
+  const container = document.getElementById('experts-detail');
+  let html = '';
+
+  EXPERTS.forEach(exp => {
+    const data = monthData[exp.id];
+    const calc = calcExpert(exp, data);
+    const hasData = calc.revenue > 0;
+
+    html += `<div class="expert-card ${exp.class}">
+      <div class="expert-head">
+        <div>
+          <div class="expert-name">${exp.name.toUpperCase()}</div>
+          <div class="expert-niche">${exp.niche}</div>
+        </div>
+        <div class="expert-profit" style="color:${exp.color}">${hasData ? fmt(calc.myProfit) + ' zł' : '—'}</div>
+      </div>`;
+
+    if (hasData) {
+      html += `
+      <div class="stat-row"><div class="stat-label">Выручка</div><div class="stat-val gold">${fmt(calc.revenue)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Трафик</div><div class="stat-val">${fmt(data.cost_traffic||0)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Продакшн</div><div class="stat-val">${fmt(data.cost_production||0)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">ФОТ</div><div class="stat-val">${fmt(data.cost_staff||0)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Банк/комиссии</div><div class="stat-val">${fmt(data.cost_banking||0)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Сервисы</div><div class="stat-val">${fmt(data.cost_services||0)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Расходы итого</div><div class="stat-val red">${fmt(calc.costs)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Фикс эксперту</div><div class="stat-val">${fmt(calc.expertFixed)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Доля эксперта (${exp.share}%)</div><div class="stat-val">${fmt(calc.expertShare)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Моя прибыль</div><div class="stat-val green">${fmt(calc.myProfit)} zł</div></div>
+      <div class="stat-row"><div class="stat-label">Маржа</div><div class="stat-val cyan">${calc.margin.toFixed(1)}%</div></div>
+      <div class="stat-row"><div class="stat-label">ROI</div><div class="stat-val ${calc.roi > 0 ? 'green' : 'red'}">${calc.roi.toFixed(0)}%</div></div>
+      <div class="stat-row"><div class="stat-label">ROMI</div><div class="stat-val orange">${calc.romi.toFixed(0)}%</div></div>`;
+    } else {
+      html += `<div class="no-data">Нет данных за этот месяц<br>Используй /input в боте</div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderFunnels(mk, monthData) {
+  const container = document.getElementById('funnels-container');
+  let html = '';
+
+  EXPERTS.forEach(exp => {
+    const data = monthData[exp.id];
+    if (!data || !data.registrations) {
+      html += `<div class="expert-card ${exp.class}">
+        <div class="expert-name">${exp.name.toUpperCase()}</div>
+        <div class="no-data">Нет данных воронки</div>
+      </div>`;
+      return;
+    }
+
+    const steps = [
+      { label: "Показы", val: data.ad_impressions || 0 },
+      { label: "Клики", val: data.ad_clicks || 0 },
+      { label: "Регистрации", val: data.registrations || 0 },
+      { label: "Вебинар", val: data.webinar_attendees || 0 },
+      { label: "Заявки", val: data.applications || 0 },
+      { label: "Предоплаты", val: data.prepayments || 0 },
+      { label: "Продажи", val: data.sales_count || 0 },
+    ].filter(s => s.val > 0);
+
+    const maxVal = steps.length > 0 ? steps[0].val : 1;
+    const adBudget = data.cost_traffic || 0;
+    const cpl = data.registrations > 0 ? adBudget / data.registrations : 0;
+
+    html += `<div class="expert-card ${exp.class}" style="margin-bottom:16px">
+      <div class="expert-head">
+        <div class="expert-name">${exp.name.toUpperCase()}</div>
+        <div class="expert-niche">${exp.niche}</div>
+      </div>
+      <div class="funnel">`;
+
+    steps.forEach((step, i) => {
+      const pct = maxVal > 0 ? (step.val / maxVal * 100) : 0;
+      const conv = i > 0 && steps[i-1].val > 0 ? (step.val / steps[i-1].val * 100).toFixed(1) + "%" : "";
+      html += `<div class="funnel-step">
+        <div class="funnel-label">${step.label}</div>
+        <div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${pct}%;background:${exp.color}"></div></div>
+        <div class="funnel-val" style="color:${exp.color}">${fmt(step.val)}</div>
+        <div class="funnel-pct">${conv}</div>
+      </div>`;
+    });
+
+    html += `</div>`;
+    if (cpl > 0) html += `<div class="stat-row"><div class="stat-label">CPL</div><div class="stat-val orange">${cpl.toFixed(0)} zł</div></div>`;
+    if (data.sales_count > 0 && adBudget > 0) {
+      const cac = adBudget / data.sales_count;
+      html += `<div class="stat-row"><div class="stat-label">CAC</div><div class="stat-val">${cac.toFixed(0)} zł</div></div>`;
+    }
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+// Tabs
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// Month nav
+document.getElementById('prev-month').addEventListener('click', () => {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  render();
+});
+document.getElementById('next-month').addEventListener('click', () => {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  render();
+});
+
+// Init
+render();
+
+// Telegram theme
+if (window.Telegram && Telegram.WebApp) {
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
+}
+</script>
+</body>
+</html>
