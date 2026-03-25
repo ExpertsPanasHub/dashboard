@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EdTech Рынок 2025-2026 — Аналитика для продюсера</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0D0D1A; color: #E0E0E0; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+h1 { text-align: center; color: #FF9800; font-size: 28px; margin-bottom: 8px; }
+.subtitle { text-align: center; color: #888; font-size: 14px; margin-bottom: 30px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 0 auto; }
+.card { background: #121220; border-radius: 16px; padding: 24px; border: 1px solid #1E1E3A; }
+.card.full { grid-column: 1 / -1; }
+.card h2 { color: #FF9800; font-size: 18px; margin-bottom: 16px; }
+.card h3 { color: #aaa; font-size: 14px; margin-bottom: 12px; }
+.chart-container { position: relative; width: 100%; height: 300px; }
+.stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1E1E3A; }
+.stat-row:last-child { border: none; }
+.stat-label { color: #aaa; }
+.stat-value { color: #fff; font-weight: bold; }
+.stat-value.green { color: #4CAF50; }
+.stat-value.orange { color: #FF9800; }
+.stat-value.red { color: #F44336; }
+.expert-card { background: #1A1A30; border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.expert-card h4 { color: #FF9800; margin-bottom: 8px; }
+.expert-card .niche { color: #4CAF50; font-size: 13px; }
+.expert-card .market { color: #ccc; font-size: 13px; margin-top: 6px; }
+.tag { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; margin: 2px; }
+.tag.hot { background: #F44336; color: #fff; }
+.tag.warm { background: #FF9800; color: #fff; }
+.tag.grow { background: #4CAF50; color: #fff; }
+.insight { background: #1A1A30; border-left: 3px solid #FF9800; padding: 12px 16px; margin: 8px 0; border-radius: 0 8px 8px 0; font-size: 14px; }
+.source { color: #555; font-size: 11px; margin-top: 4px; }
+@media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<h1>📊 EdTech Рынок России 2025-2026</h1>
+<p class="subtitle">Аналитика для продюсера экспертов | Данные: Smart Ranking, GetCourse, TAdviser | Март 2026</p>
+
+<div class="grid">
+
+<!-- 1. Общий рынок EdTech -->
+<div class="card">
+<h2>🏢 Рынок EdTech России</h2>
+<div class="chart-container"><canvas id="chartMarket"></canvas></div>
+<div class="stat-row">
+<span class="stat-label">2025 год</span>
+<span class="stat-value">154 млрд ₽</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Рост</span>
+<span class="stat-value orange">+12% (замедление)</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">2024</span>
+<span class="stat-value">137 млрд ₽ (+19%)</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">2023</span>
+<span class="stat-value">115 млрд ₽ (+32%)</span>
+</div>
+<p class="source">Источник: Smart Ranking, Топ-100 EdTech компаний</p>
+</div>
+
+<!-- 2. GetCourse (инфобизнес) -->
+<div class="card">
+<h2>🎓 GetCourse — онлайн-школы</h2>
+<div class="chart-container"><canvas id="chartGetcourse"></canvas></div>
+<div class="stat-row">
+<span class="stat-label">Выручка 2025</span>
+<span class="stat-value">158-168 млрд ₽</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Динамика</span>
+<span class="stat-value orange">Стабилизация</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Пиковый чек</span>
+<span class="stat-value">100+ тыс ₽ = 50% выручки</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Сезонность</span>
+<span class="stat-value">Пики: весна + осень</span>
+</div>
+<p class="source">Источник: GetCourse, аналитика 2025</p>
+</div>
+
+<!-- 3. Ниши по выручке -->
+<div class="card full">
+<h2>📈 Топ-ниши по выручке (GetCourse 2025)</h2>
+<div class="chart-container" style="height:350px;"><canvas id="chartNiches"></canvas></div>
+</div>
+
+<!-- 4. Глобальный рынок -->
+<div class="card">
+<h2>🌍 Глобальный рынок</h2>
+<div class="chart-container"><canvas id="chartGlobal"></canvas></div>
+<div class="stat-row">
+<span class="stat-label">2025</span>
+<span class="stat-value">$82.8 млрд</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">2026 (прогноз)</span>
+<span class="stat-value green">$101.1 млрд (+22%)</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">2029 (прогноз)</span>
+<span class="stat-value green">$279.3 млрд</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">CAGR</span>
+<span class="stat-value green">8.2-22%</span>
+</div>
+<p class="source">Источник: Business Research Company, Statista, Quantumrun</p>
+</div>
+
+<!-- 5. Рост по сегментам -->
+<div class="card">
+<h2>📊 Рост по сегментам РФ</h2>
+<div class="chart-container"><canvas id="chartSegments"></canvas></div>
+<div class="stat-row">
+<span class="stat-label">Подготовка к экзаменам</span>
+<span class="stat-value green">+50% 🔥</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Здоровье и фитнес</span>
+<span class="stat-value green">+18-25%</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">ДПО (взрослые)</span>
+<span class="stat-value orange">+6%</span>
+</div>
+<div class="stat-row">
+<span class="stat-label">Детское образование</span>
+<span class="stat-value orange">+22%</span>
+</div>
+<p class="source">Источник: Smart Ranking 2025</p>
+</div>
+
+<!-- 6. ТВОИ ЭКСПЕРТЫ — анализ ниш -->
+<div class="card full">
+<h2>🎯 Твои эксперты: позиция на рынке</h2>
+
+<div class="expert-card">
+<h4>🍏 Оксана — Похудение / Нутрициология</h4>
+<span class="tag hot">🔥 Горячая ниша</span>
+<span class="tag grow">📈 Растёт</span>
+<div class="market">
+<strong>Рынок ниши:</strong> «Здоровье и фитнес» — <strong>25 млрд ₽/год</strong> (2-я по выручке на GetCourse)<br>
+Топ-20 компаний нарастили выручку на 18% за год. Тренды: нутрициология, превентивная медицина, биохакинг.<br>
+<strong>Средний чек:</strong> 10-50 тыс ₽ (массовый сегмент) + 100+ тыс ₽ (премиум программы)<br>
+<strong>Прогноз 2026:</strong> рост 20-25%, ниша стабильно растёт из года в год благодаря тренду на здоровье
+</div>
+</div>
+
+<div class="expert-card">
+<h4>⚡ Алексей — Энерговолна / Эзотерика</h4>
+<span class="tag warm">🧘 Нишевый спрос</span>
+<span class="tag grow">📈 Восходящий тренд</span>
+<div class="market">
+<strong>Рынок ниши:</strong> «Психология + Эзотерика» — часть сегмента ~45 млрд ₽/год (здоровье + психология)<br>
+Спрос на «мягкие» практики растёт на фоне стресса и неопределённости. Астрология, энергопрактики, медитации — тренд у женской аудитории 25-45 лет.<br>
+<strong>Средний чек:</strong> 5-30 тыс ₽ (курсы), 100+ тыс ₽ (наставничество)<br>
+<strong>Прогноз 2026:</strong> рост 15-20%, ниша менее конкурентная, выше маржинальность
+</div>
+</div>
+
+<div class="expert-card">
+<h4>🎬 Татьяна — Видео контент</h4>
+<span class="tag warm">📹 Растущий спрос</span>
+<span class="tag grow">📈 Новая волна</span>
+<div class="market">
+<strong>Рынок ниши:</strong> Видеопродакшн / контент-мейкинг — часть «Профессии» (~30+ млрд ₽/год, #1 ниша на GetCourse)<br>
+Рост Reels, TikTok, YouTube Shorts создал массовый спрос на обучение видеоконтенту. Онлайн-курсы по съёмке для бизнеса, блогинг, монтаж — восходящий тренд.<br>
+<strong>Средний чек:</strong> 15-50 тыс ₽ (курсы), 100-300 тыс ₽ (наставничество/продакшн)<br>
+<strong>Прогноз 2026:</strong> рост 25-30%, видеоконтент = must-have для всех бизнесов
+</div>
+</div>
+</div>
+
+<!-- 7. Ключевые тренды -->
+<div class="card">
+<h2>🔥 Тренды 2026</h2>
+<div class="insight">📱 <strong>Короткий формат</strong> — марафоны 3-5 дней вместо длинных курсов</div>
+<div class="insight">🤖 <strong>AI в обучении</strong> — курсы по ИИ растут x3, AI-ассистенты в продуктах</div>
+<div class="insight">👤 <strong>Преподаватель-инфлюенсер</strong> — личный бренд = главный канал продаж</div>
+<div class="insight">💰 <strong>Рост среднего чека</strong> — из-за удорожания трафика школы повышают цены</div>
+<div class="insight">📉 <strong>Конверсия падает</strong> — аудитория дольше принимает решения</div>
+<div class="insight">🏥 <strong>Здоровье = #1 растущий сегмент</strong> — нутрициология, фитнес, психология</div>
+</div>
+
+<!-- 8. Рекомендации -->
+<div class="card">
+<h2>💡 Стратегические рекомендации</h2>
+<div class="insight">🍏 <strong>Оксана (похудение):</strong> Запуск марафона 990₽ — правильный ход. Рынок 25 млрд ₽, ниша растёт. Далее → upsell на 50-100к программу</div>
+<div class="insight">⚡ <strong>Алексей (энерговолна):</strong> Менее конкурентная ниша. Строить воронку через бесплатный вебинар → курс 15-30к → наставничество 150к+</div>
+<div class="insight">🎬 <strong>Татьяна (видео):</strong> Самый быстрорастущий спрос. Видеоконтент нужен ВСЕМ экспертам. Позиционирование: «видео для экспертов и бизнеса»</div>
+<div class="insight">🎯 <strong>Цель 70к PLN/мес:</strong> Реалистична при 3 экспертах + правильных воронках. Ниши выбраны верно — все в растущих сегментах</div>
+</div>
+
+</div>
+
+<script>
+// Color palette
+const orange = '#FF9800';
+const green = '#4CAF50';
+const blue = '#2196F3';
+const red = '#F44336';
+const purple = '#9C27B0';
+const cyan = '#00BCD4';
+
+const gridColor = 'rgba(255,255,255,0.08)';
+const defaults = {
+    color: '#aaa',
+    plugins: { legend: { labels: { color: '#ccc' } } },
+    scales: {
+        x: { ticks: { color: '#aaa' }, grid: { color: gridColor } },
+        y: { ticks: { color: '#aaa' }, grid: { color: gridColor } }
+    }
+};
+
+// 1. EdTech Russia Market
+new Chart(document.getElementById('chartMarket'), {
+    type: 'bar',
+    data: {
+        labels: ['2021', '2022', '2023', '2024', '2025', '2026*'],
+        datasets: [{
+            label: 'Выручка Топ-100, млрд ₽',
+            data: [55, 72, 87, 115, 137, 154, 170],
+            backgroundColor: [blue, blue, blue, blue, orange, green],
+            borderRadius: 8
+        }]
+    },
+    options: { ...defaults, responsive: true, maintainAspectRatio: false }
+});
+
+// 2. GetCourse
+new Chart(document.getElementById('chartGetcourse'), {
+    type: 'line',
+    data: {
+        labels: ['2022', '2023', '2024', '2025', '2026*'],
+        datasets: [{
+            label: 'Выручка школ, млрд ₽',
+            data: [120, 160, 158, 163, 175],
+            borderColor: orange,
+            backgroundColor: 'rgba(255,152,0,0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 6,
+            pointBackgroundColor: orange
+        }]
+    },
+    options: { ...defaults, responsive: true, maintainAspectRatio: false }
+});
+
+// 3. Niches
+new Chart(document.getElementById('chartNiches'), {
+    type: 'bar',
+    data: {
+        labels: ['Профессии', 'Здоровье\nи фитнес', 'Хобби', 'Бизнес', 'Финансы\nи инвест.', 'Дети', 'Психология\nи эзотерика', 'Видео\nи контент'],
+        datasets: [{
+            label: 'Выручка, млрд ₽',
+            data: [32, 25, 18, 16, 13, 12, 10, 8],
+            backgroundColor: [blue, green, purple, orange, cyan, '#E91E63', '#9C27B0', red],
+            borderRadius: 8
+        }, {
+            label: 'Рост %',
+            data: [5, 22, 10, -5, 15, 22, 18, 30],
+            type: 'line',
+            borderColor: orange,
+            pointBackgroundColor: orange,
+            pointRadius: 5,
+            yAxisID: 'y1',
+            tension: 0.3
+        }]
+    },
+    options: {
+        ...defaults,
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            ...defaults.scales,
+            y: { ...defaults.scales.y, title: { display: true, text: 'млрд ₽', color: '#aaa' } },
+            y1: { position: 'right', ticks: { color: orange, callback: v => v + '%' }, grid: { display: false }, title: { display: true, text: 'Рост %', color: orange } }
+        }
+    }
+});
+
+// 4. Global Market
+new Chart(document.getElementById('chartGlobal'), {
+    type: 'line',
+    data: {
+        labels: ['2023', '2024', '2025', '2026', '2027', '2028', '2029'],
+        datasets: [{
+            label: 'Глобальный рынок, $млрд',
+            data: [52, 68, 83, 101, 135, 190, 279],
+            borderColor: green,
+            backgroundColor: 'rgba(76,175,80,0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 6,
+            pointBackgroundColor: green
+        }]
+    },
+    options: { ...defaults, responsive: true, maintainAspectRatio: false }
+});
+
+// 5. Segments growth
+new Chart(document.getElementById('chartSegments'), {
+    type: 'radar',
+    data: {
+        labels: ['Экзамены', 'Здоровье', 'AI/ИИ', 'Дети', 'ДПО', 'Видео контент'],
+        datasets: [{
+            label: 'Рост 2025, %',
+            data: [50, 22, 124, 22, 6, 30],
+            backgroundColor: 'rgba(255,152,0,0.2)',
+            borderColor: orange,
+            pointBackgroundColor: orange
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            r: {
+                ticks: { color: '#aaa', backdropColor: 'transparent' },
+                grid: { color: gridColor },
+                pointLabels: { color: '#ccc', font: { size: 12 } }
+            }
+        },
+        plugins: { legend: { labels: { color: '#ccc' } } }
+    }
+});
+</script>
+</body>
+</html>
