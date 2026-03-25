@@ -1477,6 +1477,14 @@
         <span class="stat-label">Выручка/работник</span>
         <span class="stat-value" id="fin-per-employee">—</span>
       </div>
+      <div class="stat-row">
+        <span class="stat-label">Выручка/м² (175.88 м²)</span>
+        <span class="stat-value" id="fin-per-sqm">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Δ vs пред. месяц</span>
+        <span class="stat-value" id="fin-delta-prev">—</span>
+      </div>
     </div>
 
     <!-- REVENUE BY WEEKDAY -->
@@ -1684,6 +1692,31 @@ function renderFinance() {
   // Revenue per employee
   const revPerEmp = rev / STAFF_COUNT;
   document.getElementById('fin-per-employee').textContent = formatNum(Math.round(revPerEmp)) + " PLN";
+
+  // Revenue per m²
+  const AREA_SQM = 175.88;
+  const revPerSqm = rev / AREA_SQM;
+  const sqmEl = document.getElementById('fin-per-sqm');
+  sqmEl.textContent = revPerSqm.toFixed(0) + " PLN/м²";
+  sqmEl.className = "stat-value " + (revPerSqm >= 800 ? "green" : revPerSqm >= 600 ? "cyan" : "gold");
+
+  // Delta vs previous month (absolute)
+  const deltaPrevEl = document.getElementById('fin-delta-prev');
+  if (prev) {
+    const prevRev = prev.partial ? prev.partialRevenue : prev.revenue;
+    const prevDays = prev.partial ? prev.partialDays : prev.days;
+    const curDays = m.partial ? m.partialDays : m.days;
+    // Normalize to daily for fair comparison
+    const prevDaily = prevRev / prevDays;
+    const curDaily = rev / daysUsed;
+    const dailyDelta = ((curDaily - prevDaily) / prevDaily * 100);
+    const sign2 = dailyDelta >= 0 ? "+" : "";
+    const prevSqm = prevRev / AREA_SQM;
+    deltaPrevEl.innerHTML = sign2 + dailyDelta.toFixed(1) + "% (дн.) | " + prevSqm.toFixed(0) + " → " + revPerSqm.toFixed(0) + " PLN/м²";
+    deltaPrevEl.className = "stat-value " + (dailyDelta >= 0 ? "delta-up" : "delta-down");
+  } else {
+    deltaPrevEl.textContent = "—";
+  }
 
   // Month label
   document.getElementById('month-label').textContent = m.label;
