@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Перезагрузка питания за 3 дня — Марафон по нутрициологии</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #4CAF50;
+  --primary-dark: #388E3C;
+  --primary-light: #C8E6C9;
+  --accent: #FF6B35;
+  --bg: #FAFAF5;
+  --bg-dark: #1a1a2e;
+  --text: #2d2d2d;
+  --text-light: #666;
+  --white: #ffffff;
+  --shadow: 0 4px 20px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+  --radius: 16px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── HERO ──────────────────────────────────────────────────────────── */
+
+.hero {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(76,175,80,0.15) 0%, transparent 70%);
+  top: -100px; right: -100px;
+  border-radius: 50%;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 70%);
+  bottom: -100px; left: -100px;
+  border-radius: 50%;
+}
+
+.hero-content {
+  max-width: 800px;
+  text-align: center;
+  z-index: 2;
+  color: var(--white);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(76,175,80,0.2);
+  border: 1px solid rgba(76,175,80,0.4);
+  color: var(--primary);
+  padding: 8px 24px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.hero-title span {
+  color: var(--primary);
+}
+
+.hero-subtitle {
+  font-size: clamp(16px, 2.5vw, 20px);
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 32px;
+  font-weight: 300;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent);
+  color: white;
+  padding: 18px 48px;
+  border-radius: 100px;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 4px 25px rgba(255,107,53,0.4);
+}
+
+.hero-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 35px rgba(255,107,53,0.5);
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+
+.hero-stat {
+  text-align: center;
+}
+
+.hero-stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.hero-stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── SECTION ───────────────────────────────────────────────────────── */
+
+.section {
+  padding: 80px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-label {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+
+.section-sub {
+  font-size: 17px;
+  color: var(--text-light);
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+/* ── PROBLEMS ──────────────────────────────────────────────────────── */
+
+.problems {
+  background: var(--white);
+  padding: 80px 20px;
+}
+
+.problems-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.problem-card {
+  background: #FFF5F0;
+  border-radius: var(--radius);
+  padding: 28px;
+  border-left: 4px solid var(--accent);
+}
+
+.problem-card .emoji {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.problem-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.problem-card p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* ── DAYS ──────────────────────────────────────────────────────────── */
+
+.days-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.day-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  transition: transform 0.3s;
+}
+
+.day-card:hover {
+  transform: translateX(8px);
+}
+
+.day-num {
+  min-width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.day-content h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.day-content .day-theme {
+  color: var(--primary-dark);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.day-content p {
+  font-size: 15px;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+.day-content .practice {
+  margin-top: 12px;
+  background: var(--primary-light);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--primary-dark);
+  font-weight: 500;
+}
+
+/* ── WHAT YOU GET ──────────────────────────────────────────────────── */
+
+.benefits {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: white;
+  padding: 80px 20px;
+}
+
+.benefits-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.benefit-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  padding: 28px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.1);
+}
+
+.benefit-icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.benefit-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.benefit-card p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.6;
+}
+
+/* ── EXPERT ─────────────────────────────────────────────────────────── */
+
+.expert {
+  background: var(--white);
+  padding: 80px 20px;
+}
+
+.expert-content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.expert-photo {
+  width: 280px;
+  height: 340px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--primary-light), #e8f5e9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.expert-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.expert-info {
+  flex: 1;
+  min-width: 280px;
+}
+
+.expert-info h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.expert-info .expert-role {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+
+.expert-info p {
+  color: var(--text-light);
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+
+.expert-creds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.expert-cred {
+  background: #E8F5E9;
+  color: var(--primary-dark);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── CTA SECTION ───────────────────────────────────────────────────── */
+
+.cta-section {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  padding: 80px 20px;
+  text-align: center;
+  color: white;
+}
+
+.cta-section .section-title {
+  color: white;
+  max-width: 700px;
+  margin: 0 auto 16px;
+}
+
+.cta-section .section-sub {
+  color: rgba(255,255,255,0.85);
+  max-width: 500px;
+  margin: 0 auto 32px;
+}
+
+.cta-price {
+  margin-bottom: 24px;
+}
+
+.cta-price .old-price {
+  font-size: 20px;
+  text-decoration: line-through;
+  opacity: 0.6;
+  margin-right: 12px;
+}
+
+.cta-price .new-price {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.cta-price .currency {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  color: var(--primary-dark);
+  padding: 20px 56px;
+  border-radius: 100px;
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+}
+
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 35px rgba(0,0,0,0.3);
+}
+
+.cta-guarantee {
+  margin-top: 16px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* ── FAQ ───────────────────────────────────────────────────────────── */
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faq-item {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.faq-q {
+  padding: 20px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.faq-q:hover { background: #f9f9f5; }
+
+.faq-q::after {
+  content: '+';
+  font-size: 24px;
+  color: var(--primary);
+  font-weight: 300;
+  transition: transform 0.3s;
+}
+
+.faq-item.open .faq-q::after {
+  transform: rotate(45deg);
+}
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.faq-a-inner {
+  padding: 0 24px 20px;
+  color: var(--text-light);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.faq-item.open .faq-a {
+  max-height: 200px;
+}
+
+/* ── FOOTER ────────────────────────────────────────────────────────── */
+
+.footer {
+  background: var(--bg-dark);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 13px;
+}
+
+/* ── RESPONSIVE ────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .day-card { flex-direction: column; }
+  .day-num { width: 48px; height: 48px; font-size: 18px; }
+  .expert-content { flex-direction: column; text-align: center; }
+  .expert-photo { width: 200px; height: 240px; margin: 0 auto; }
+  .hero-stats { gap: 24px; }
+  .hero-cta { padding: 16px 36px; font-size: 16px; }
+}
+
+/* ── ANIMATIONS ────────────────────────────────────────────────────── */
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s, transform 0.6s;
+}
+
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Онлайн-марафон · 3 дня</div>
+    <h1 class="hero-title">Перезагрузка <span>питания</span> за 3 дня</h1>
+    <p class="hero-subtitle">Узнайте, почему диеты не работают, и получите простую систему питания, которую можно внедрить сразу — без подсчёта калорий и жёстких ограничений</p>
+    <a href="#signup" class="hero-cta">Записаться на марафон →</a>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val">3</div>
+        <div class="hero-stat-label">Дня практики</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">3</div>
+        <div class="hero-stat-label">Живых эфира</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">100%</div>
+        <div class="hero-stat-label">Практика</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEMS -->
+<section class="problems">
+  <div class="section" style="padding-top:0;padding-bottom:0">
+    <div class="section-label">Знакомо?</div>
+    <div class="section-title">Вы уже пробовали, но ничего не работает</div>
+  </div>
+  <div class="problems-grid">
+    <div class="problem-card fade-up">
+      <div class="emoji">🔄</div>
+      <h3>Диеты — замкнутый круг</h3>
+      <p>Похудели на 5 кг, вернули 7. Каждый раз одно и то же, только хуже</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="emoji">🤯</div>
+      <h3>Слишком много информации</h3>
+      <p>Кето, интервальное голодание, ПП, веган — голова кругом. Что выбрать?</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="emoji">😩</div>
+      <h3>Нет энергии</h3>
+      <p>К обеду уже устали, а вечером хочется «заесть» стресс. Знакомо?</p>
+    </div>
+    <div class="problem-card fade-up">
+      <div class="emoji">📊</div>
+      <h3>Считать калории — мука</h3>
+      <p>Взвешивать каждый грамм — не для вас. Нужна простая система</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section class="section">
+  <div class="section-label">Программа</div>
+  <div class="section-title">Что будет за 3 дня</div>
+  <div class="section-sub">Каждый день — конкретный результат. Вы почувствуете прогресс уже после первого эфира</div>
+
+  <div class="days-grid">
+    <div class="day-card fade-up">
+      <div class="day-num">1</div>
+      <div class="day-content">
+        <h3>Диагностика</h3>
+        <div class="day-theme">«Почему диеты не работают и что нужно вашему телу»</div>
+        <p>Разберём главные мифы о питании. Вы поймёте, почему всё, что вы делали раньше, не давало результата</p>
+        <div class="practice">✍️ Практика: чек-лист «Аудит моего питания»</div>
+      </div>
+    </div>
+
+    <div class="day-card fade-up">
+      <div class="day-num">2</div>
+      <div class="day-content">
+        <h3>Система</h3>
+        <div class="day-theme">«Персональная тарелка — рацион без подсчёта калорий»</div>
+        <p>Получите простую модель питания, которую внедрите сразу. Без весов, без приложений, без стресса</p>
+        <div class="practice">✍️ Практика: собираем ваше меню на 1 день по шаблону</div>
+      </div>
+    </div>
+
+    <div class="day-card fade-up">
+      <div class="day-num">3</div>
+      <div class="day-content">
+        <h3>Результат</h3>
+        <div class="day-theme">«Как не сорваться и выстроить питание надолго»</div>
+        <p>Разбор типичных ошибок, кейсы участников, ответы на ваши вопросы. Стратегия на долгосрок</p>
+        <div class="practice">✍️ Практика: персональный план питания на неделю</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits">
+  <div style="max-width:900px;margin:0 auto;text-align:center">
+    <div class="section-label" style="color:var(--primary)">Что вы получите</div>
+    <div class="section-title" style="color:white">Не просто информация — практические инструменты</div>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon">📹</div>
+      <h3>3 живых эфира</h3>
+      <p>30-40 минут контента + Q&A. Записи останутся в закрытом канале</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon">📋</div>
+      <h3>Чек-листы и шаблоны</h3>
+      <p>Аудит питания, шаблон тарелки, план на неделю — всё готовое</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon">🤖</div>
+      <h3>Telegram-бот</h3>
+      <p>Ежедневные задания и напоминания. Не даст забить и забыть</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon">💬</div>
+      <h3>Чат участников</h3>
+      <p>Поддержка единомышленников. Вместе легче менять привычки</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon">🏆</div>
+      <h3>Геймификация</h3>
+      <p>Баллы за задания. Самые активные получат бонусы</p>
+    </div>
+    <div class="benefit-card fade-up">
+      <div class="benefit-icon">🎁</div>
+      <h3>Бонус</h3>
+      <p>Розыгрыш бесплатной консультации нутрициолога среди участников</p>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERT -->
+<section class="expert">
+  <div class="expert-content fade-up">
+    <div class="expert-photo">
+      <!-- Placeholder — replace with real photo -->
+      👩‍⚕️
+    </div>
+    <div class="expert-info">
+      <div class="section-label">Эксперт</div>
+      <h3>Имя эксперта</h3>
+      <div class="expert-role">Нутрициолог · Специалист по снижению веса</div>
+      <p>Помогаю людям выстроить здоровые отношения с едой без жёстких диет и ограничений. Не «посажу на гречку», а научу есть вкусно и при этом худеть.</p>
+      <p>Мой подход — это система, а не временная мера. Результаты моих клиентов сохраняются, потому что они меняют привычки, а не просто терпят.</p>
+      <div class="expert-creds">
+        <span class="expert-cred">Сертифицированный нутрициолог</span>
+        <span class="expert-cred">100+ клиентов</span>
+        <span class="expert-cred">Индивидуальный подход</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="signup">
+  <div class="section-title">Начните перезагрузку прямо сейчас</div>
+  <p class="section-sub">3 дня, которые изменят ваш подход к питанию навсегда</p>
+  <div class="cta-price">
+    <!-- <span class="old-price">2 990 ₽</span> -->
+    <span class="new-price">990 <span class="currency">₽</span></span>
+  </div>
+  <a href="#" class="cta-btn">Записаться на марафон →</a>
+  <div class="cta-guarantee">🔒 Безопасная оплата · Доступ сразу после оплаты</div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="section-label">Вопросы</div>
+  <div class="section-title">Частые вопросы</div>
+  <div class="faq-list" style="margin-top:32px">
+    <div class="faq-item">
+      <div class="faq-q">Нужно ли считать калории?</div>
+      <div class="faq-a"><div class="faq-a-inner">Нет! В этом вся суть марафона. Вы получите простую визуальную систему «тарелки», которая работает без подсчётов и весов.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Я уже пробовала кучу диет. Чем это отличается?</div>
+      <div class="faq-a"><div class="faq-a-inner">Мы не даём диету. Мы даём систему питания, которая становится образом жизни. Без срывов, без «запрещёнки», без чувства вины.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Сколько времени нужно уделять в день?</div>
+      <div class="faq-a"><div class="faq-a-inner">Эфир — 40-60 минут. Практическое задание — 10-15 минут. Итого около часа в день в течение 3 дней.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Будут ли записи?</div>
+      <div class="faq-a"><div class="faq-a-inner">Да, все эфиры сохраняются в закрытом Telegram-канале. Вы сможете пересмотреть в удобное время.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Подойдёт ли мне, если я кормлю грудью / у меня аллергии?</div>
+      <div class="faq-a"><div class="faq-a-inner">Марафон даёт принципы здорового питания, а не конкретную диету. Принципы универсальны. Для индивидуальных ограничений рекомендуем программу сопровождения.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>© 2026 · Все права защищены</p>
+</footer>
+
+<script>
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    document.querySelectorAll('.faq-item').forEach(i => {
+      if (i !== item) i.classList.remove('open');
+    });
+    item.classList.toggle('open');
+  });
+});
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
