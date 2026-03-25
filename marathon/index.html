@@ -128,6 +128,36 @@ body {
   box-shadow: 0 8px 35px rgba(255,107,53,0.5);
 }
 
+.countdown {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.cd-item {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px;
+  padding: 12px 16px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.cd-item span {
+  display: block;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.cd-item small {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .hero-stats {
   display: flex;
   justify-content: center;
@@ -580,10 +610,18 @@ body {
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge">Онлайн-марафон · 3 дня</div>
+    <div class="hero-badge">Онлайн-марафон · 3 дня · Старт 12 апреля</div>
     <h1 class="hero-title">Перезагрузка <span>питания</span> за 3 дня</h1>
     <p class="hero-subtitle">Узнайте, почему диеты не работают, и получите простую систему питания, которую можно внедрить сразу — без подсчёта калорий и жёстких ограничений</p>
-    <a href="#signup" class="hero-cta">Записаться на марафон →</a>
+    <a href="https://t.me/panas_dieta_bot?start=marathon" class="hero-cta">Записаться на марафон →</a>
+    
+    <div class="countdown" id="countdown">
+      <div class="cd-item"><span id="cd-days">00</span><small>дней</small></div>
+      <div class="cd-item"><span id="cd-hours">00</span><small>часов</small></div>
+      <div class="cd-item"><span id="cd-mins">00</span><small>минут</small></div>
+      <div class="cd-item"><span id="cd-secs">00</span><small>секунд</small></div>
+    </div>
+
     <div class="hero-stats">
       <div class="hero-stat">
         <div class="hero-stat-val">3</div>
@@ -719,7 +757,7 @@ body {
     </div>
     <div class="expert-info">
       <div class="section-label">Эксперт</div>
-      <h3>Имя эксперта</h3>
+      <h3>Оксана Иванова</h3>
       <div class="expert-role">Нутрициолог · Специалист по снижению веса</div>
       <p>Помогаю людям выстроить здоровые отношения с едой без жёстких диет и ограничений. Не «посажу на гречку», а научу есть вкусно и при этом худеть.</p>
       <p>Мой подход — это система, а не временная мера. Результаты моих клиентов сохраняются, потому что они меняют привычки, а не просто терпят.</p>
@@ -734,13 +772,12 @@ body {
 
 <!-- CTA -->
 <section class="cta-section" id="signup">
-  <div class="section-title">Начните перезагрузку прямо сейчас</div>
-  <p class="section-sub">3 дня, которые изменят ваш подход к питанию навсегда</p>
+  <div class="section-title">Начните перезагрузку 12 апреля</div>
+  <p class="section-sub">3 дня, которые изменят ваш подход к питанию навсегда. Количество мест ограничено.</p>
   <div class="cta-price">
-    <!-- <span class="old-price">2 990 ₽</span> -->
     <span class="new-price">990 <span class="currency">₽</span></span>
   </div>
-  <a href="#" class="cta-btn">Записаться на марафон →</a>
+  <a href="https://t.me/panas_dieta_bot?start=marathon" class="cta-btn">Записаться на марафон →</a>
   <div class="cta-guarantee">🔒 Безопасная оплата · Доступ сразу после оплаты</div>
 </section>
 
@@ -774,7 +811,7 @@ body {
 
 <!-- FOOTER -->
 <footer class="footer">
-  <p>© 2026 · Все права защищены</p>
+  <p>© 2026 Оксана Иванова · Все права защищены</p>
 </footer>
 
 <script>
@@ -799,6 +836,27 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Countdown to April 12, 2026 10:00 Moscow time
+const target = new Date('2026-04-12T10:00:00+03:00').getTime();
+function updateCD() {
+  const now = Date.now();
+  const diff = target - now;
+  if (diff <= 0) {
+    document.getElementById('countdown').innerHTML = '<div style="color:var(--primary);font-weight:700;font-size:18px">🔥 Марафон начался!</div>';
+    return;
+  }
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const s = Math.floor((diff % 60000) / 1000);
+  document.getElementById('cd-days').textContent = d;
+  document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-mins').textContent = String(m).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(s).padStart(2,'0');
+}
+updateCD();
+setInterval(updateCD, 1000);
 </script>
 </body>
 </html>
