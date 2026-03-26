@@ -1322,6 +1322,50 @@
       </div>
     </div>
 
+    <!-- РАСПАКОВКА ЭКСПЕРТНОСТИ -->
+    <div class="agent-card gold-accent">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(255,160,0,0.15);color:#ff9100">🔍</div>
+        <div class="agent-info">
+          <div class="agent-name" style="color:#ff9100">РАСПАКОВКА ЭКСПЕРТНОСТИ</div>
+          <div class="agent-role">Анкета → AI-анализ → Темы блога</div>
+          <div class="agent-bot">@raspakovkaexrt_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">14 вопросов → AI находит тему блога на пересечении навыков, интересов и опыта</div>
+      <div class="agent-model"><span class="model-dot" style="background:#ff9100"></span>Claude Sonnet</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Анкетирование 4 блока</span>
+        <span class="cap-tag">AI-анализ ответов</span>
+        <span class="cap-tag">2-3 темы блога</span>
+        <span class="cap-tag">Идеи первых видео</span>
+      </div>
+    </div>
+
+    <!-- ДЕБИТОРКА CEG -->
+    <div class="agent-card cyan-accent">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(0,150,255,0.15);color:#0096ff">💼</div>
+        <div class="agent-info">
+          <div class="agent-name" style="color:#0096ff">ДЕБИТОРКА CEG</div>
+          <div class="agent-role">Учёт фактур / Consulting Experts Group</div>
+          <div class="agent-bot">@consultingexpertgroup_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Отдельный учёт фактур для CONSULTING EXPERTS GROUP SP. Z O.O</div>
+      <div class="agent-model"><span class="model-dot" style="background:#0096ff"></span>Claude Sonnet</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">PDF/Фото → распознание</span>
+        <span class="cap-tag">Напоминания об оплате</span>
+        <span class="cap-tag">Трекинг дедлайнов</span>
+        <span class="cap-tag">Дубликаты</span>
+      </div>
+    </div>
+
     <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
     <div class="agent-card purple-accent">
       <div class="agent-head">
@@ -1629,6 +1673,8 @@ const PROJECTS = [
   { name: "ZUS трекинг", emoji: "📋", status: "done", progress: 100, business: "Ресторан", tasks: "2/2" },
   { name: "GMB бот", emoji: "📍", status: "done", progress: 100, business: "GMB", tasks: "8/8" },
   { name: "Монитор агентов", emoji: "🛡", status: "done", progress: 100, business: "Все", tasks: "4/4" },
+  { name: "Распаковка экспертности", emoji: "🔍", status: "active", progress: 100, business: "Продюсирование", tasks: "3/3" },
+  { name: "Дебиторка CEG", emoji: "💼", status: "active", progress: 100, business: "Бизнес", tasks: "3/3" },
   { name: "OAuth миграция", emoji: "🔐", status: "done", progress: 100, business: "Все", tasks: "6/6" },
   { name: "Watchdog мониторинг", emoji: "🐕", status: "done", progress: 100, business: "Все", tasks: "1/1" },
   { name: "Google Workspace (gog)", emoji: "📧", status: "blocked", progress: 10, business: "Все", tasks: "1/5" },
@@ -1637,6 +1683,9 @@ const PROJECTS = [
 
 const TIMELINE = [
   // ── 24.03.2026 ──
+  { date: "26.03.2026", event: "Дебиторка CEG (@consultingexpertgroup_bot) — отдельный бизнес", type: "launch" },
+  { date: "26.03.2026", event: "Распаковка экспертности (@raspakovkaexrt_bot) — анкета + AI", type: "launch" },
+  { date: "26.03.2026", event: "POSbistro: авто-скрап наличные/карта + утренняя сводка", type: "feature" },
   { date: "24.03.2026", event: "Монитор агентов запущен (@sanches_monitor_bot)", type: "launch" },
   { date: "24.03.2026", event: "GMB Специалист — отдельный бот (@gmb_agent_bot)", type: "launch" },
   { date: "24.03.2026", event: "Все боты переключены на OAuth (без API ключей)", type: "milestone" },
