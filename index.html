@@ -1366,6 +1366,50 @@
       </div>
     </div>
 
+    <!-- БУХГАЛТЕР -->
+    <div class="agent-card green-accent">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(0,255,130,0.15);color:#00ff82">📊</div>
+        <div class="agent-info">
+          <div class="agent-name" style="color:#00ff82">БУХГАЛТЕР</div>
+          <div class="agent-role">Налоги, ZUS, VAT, декларации</div>
+          <div class="agent-bot">@podatkigov_pl_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">Бухгалтер-ассистент для обоих бизнесов (Did Panas + CEG)</div>
+      <div class="agent-model"><span class="model-dot" style="background:#00ff82"></span>Claude Sonnet</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">Календарь сроков</span>
+        <span class="cap-tag">Калькулятор brutto/netto</span>
+        <span class="cap-tag">Ставки VAT/ZUS</span>
+        <span class="cap-tag">Свободный диалог</span>
+      </div>
+    </div>
+
+    <!-- HR / КАДРЫ -->
+    <div class="agent-card" style="border-left:3px solid #c864ff">
+      <div class="agent-head">
+        <div class="agent-avatar" style="background:rgba(200,100,255,0.15);color:#c864ff">👥</div>
+        <div class="agent-info">
+          <div class="agent-name" style="color:#c864ff">HR / КАДРЫ</div>
+          <div class="agent-role">Договоры, отпуска, документооборот</div>
+          <div class="agent-bot">@kadry_doc_hr_bot</div>
+        </div>
+        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
+      </div>
+      <div class="agent-full">HR-менеджер + генерация документов для польского бизнеса</div>
+      <div class="agent-model"><span class="model-dot" style="background:#c864ff"></span>Claude Sonnet</div>
+      <div class="caps-label">ВОЗМОЖНОСТИ</div>
+      <div class="caps-list">
+        <span class="cap-tag">База сотрудников</span>
+        <span class="cap-tag">Генерация umów</span>
+        <span class="cap-tag">Типы договоров</span>
+        <span class="cap-tag">Отпуска/BHP/L4</span>
+      </div>
+    </div>
+
     <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
     <div class="agent-card purple-accent">
       <div class="agent-head">
@@ -1675,6 +1719,8 @@ const PROJECTS = [
   { name: "Монитор агентов", emoji: "🛡", status: "done", progress: 100, business: "Все", tasks: "4/4" },
   { name: "Распаковка экспертности", emoji: "🔍", status: "active", progress: 100, business: "Продюсирование", tasks: "3/3" },
   { name: "Дебиторка CEG", emoji: "💼", status: "active", progress: 100, business: "Бизнес", tasks: "3/3" },
+  { name: "Бухгалтер", emoji: "📊", status: "active", progress: 100, business: "Оба", tasks: "5/5" },
+  { name: "HR / Кадры", emoji: "👥", status: "active", progress: 100, business: "Оба", tasks: "6/6" },
   { name: "OAuth миграция", emoji: "🔐", status: "done", progress: 100, business: "Все", tasks: "6/6" },
   { name: "Watchdog мониторинг", emoji: "🐕", status: "done", progress: 100, business: "Все", tasks: "1/1" },
   { name: "Google Workspace (gog)", emoji: "📧", status: "blocked", progress: 10, business: "Все", tasks: "1/5" },
@@ -1683,6 +1729,9 @@ const PROJECTS = [
 
 const TIMELINE = [
   // ── 24.03.2026 ──
+  { date: "27.03.2026", event: "HR / Кадры (@kadry_doc_hr_bot) — договоры, отпуска, документы", type: "launch" },
+  { date: "27.03.2026", event: "Бухгалтер (@podatkigov_pl_bot) — налоги, ZUS, VAT", type: "launch" },
+  { date: "27.03.2026", event: "Все боты на модель openclaw через gateway proxy", type: "feature" },
   { date: "26.03.2026", event: "Дебиторка CEG (@consultingexpertgroup_bot) — отдельный бизнес", type: "launch" },
   { date: "26.03.2026", event: "Распаковка экспертности (@raspakovkaexrt_bot) — анкета + AI", type: "launch" },
   { date: "26.03.2026", event: "POSbistro: авто-скрап наличные/карта + утренняя сводка", type: "feature" },
