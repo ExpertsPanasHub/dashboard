@@ -1322,94 +1322,6 @@
       </div>
     </div>
 
-    <!-- РАСПАКОВКА ЭКСПЕРТНОСТИ -->
-    <div class="agent-card gold-accent">
-      <div class="agent-head">
-        <div class="agent-avatar" style="background:rgba(255,160,0,0.15);color:#ff9100">🔍</div>
-        <div class="agent-info">
-          <div class="agent-name" style="color:#ff9100">РАСПАКОВКА ЭКСПЕРТНОСТИ</div>
-          <div class="agent-role">Анкета → AI-анализ → Темы блога</div>
-          <div class="agent-bot">@raspakovkaexrt_bot</div>
-        </div>
-        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
-      </div>
-      <div class="agent-full">14 вопросов → AI находит тему блога на пересечении навыков, интересов и опыта</div>
-      <div class="agent-model"><span class="model-dot" style="background:#ff9100"></span>Claude Sonnet</div>
-      <div class="caps-label">ВОЗМОЖНОСТИ</div>
-      <div class="caps-list">
-        <span class="cap-tag">Анкетирование 4 блока</span>
-        <span class="cap-tag">AI-анализ ответов</span>
-        <span class="cap-tag">2-3 темы блога</span>
-        <span class="cap-tag">Идеи первых видео</span>
-      </div>
-    </div>
-
-    <!-- ДЕБИТОРКА CEG -->
-    <div class="agent-card cyan-accent">
-      <div class="agent-head">
-        <div class="agent-avatar" style="background:rgba(0,150,255,0.15);color:#0096ff">💼</div>
-        <div class="agent-info">
-          <div class="agent-name" style="color:#0096ff">ДЕБИТОРКА CEG</div>
-          <div class="agent-role">Учёт фактур / Consulting Experts Group</div>
-          <div class="agent-bot">@consultingexpertgroup_bot</div>
-        </div>
-        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
-      </div>
-      <div class="agent-full">Отдельный учёт фактур для CONSULTING EXPERTS GROUP SP. Z O.O</div>
-      <div class="agent-model"><span class="model-dot" style="background:#0096ff"></span>Claude Sonnet</div>
-      <div class="caps-label">ВОЗМОЖНОСТИ</div>
-      <div class="caps-list">
-        <span class="cap-tag">PDF/Фото → распознание</span>
-        <span class="cap-tag">Напоминания об оплате</span>
-        <span class="cap-tag">Трекинг дедлайнов</span>
-        <span class="cap-tag">Дубликаты</span>
-      </div>
-    </div>
-
-    <!-- БУХГАЛТЕР -->
-    <div class="agent-card green-accent">
-      <div class="agent-head">
-        <div class="agent-avatar" style="background:rgba(0,255,130,0.15);color:#00ff82">📊</div>
-        <div class="agent-info">
-          <div class="agent-name" style="color:#00ff82">БУХГАЛТЕР</div>
-          <div class="agent-role">Налоги, ZUS, VAT, декларации</div>
-          <div class="agent-bot">@podatkigov_pl_bot</div>
-        </div>
-        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
-      </div>
-      <div class="agent-full">Бухгалтер-ассистент для обоих бизнесов (Did Panas + CEG)</div>
-      <div class="agent-model"><span class="model-dot" style="background:#00ff82"></span>Claude Sonnet</div>
-      <div class="caps-label">ВОЗМОЖНОСТИ</div>
-      <div class="caps-list">
-        <span class="cap-tag">Календарь сроков</span>
-        <span class="cap-tag">Калькулятор brutto/netto</span>
-        <span class="cap-tag">Ставки VAT/ZUS</span>
-        <span class="cap-tag">Свободный диалог</span>
-      </div>
-    </div>
-
-    <!-- HR / КАДРЫ -->
-    <div class="agent-card" style="border-left:3px solid #c864ff">
-      <div class="agent-head">
-        <div class="agent-avatar" style="background:rgba(200,100,255,0.15);color:#c864ff">👥</div>
-        <div class="agent-info">
-          <div class="agent-name" style="color:#c864ff">HR / КАДРЫ</div>
-          <div class="agent-role">Договоры, отпуска, документооборот</div>
-          <div class="agent-bot">@kadry_doc_hr_bot</div>
-        </div>
-        <div class="agent-status"><span class="status-dot" style="width:5px;height:5px"></span>ONLINE</div>
-      </div>
-      <div class="agent-full">HR-менеджер + генерация документов для польского бизнеса</div>
-      <div class="agent-model"><span class="model-dot" style="background:#c864ff"></span>Claude Sonnet</div>
-      <div class="caps-label">ВОЗМОЖНОСТИ</div>
-      <div class="caps-list">
-        <span class="cap-tag">База сотрудников</span>
-        <span class="cap-tag">Генерация umów</span>
-        <span class="cap-tag">Типы договоров</span>
-        <span class="cap-tag">Отпуска/BHP/L4</span>
-      </div>
-    </div>
-
     <!-- ПАНЕЛЬ УПРАВЛЕНИЯ -->
     <div class="agent-card purple-accent">
       <div class="agent-head">
@@ -1538,12 +1450,20 @@
         <span class="stat-value" id="fin-receipts">—</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">Безубыточность</span>
-        <span class="stat-value green">95 162 PLN ✅</span>
+        <span class="stat-label">💸 Расходы</span>
+        <span class="stat-value" id="fin-expenses">—</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">Маржа</span>
-        <span class="stat-value green">76.44%</span>
+        <span class="stat-label">💰 Прибыль</span>
+        <span class="stat-value" id="fin-profit">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">📈 Рентабельность</span>
+        <span class="stat-value" id="fin-margin">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Безубыточность</span>
+        <span class="stat-value green">95 162 PLN ✅</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Food cost</span>
@@ -1551,7 +1471,7 @@
       </div>
       <div class="stat-row">
         <span class="stat-label">ФОТ (весь)</span>
-        <span class="stat-value">48 169 PLN</span>
+        <span class="stat-value">47 429 PLN</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">ФОТ % от выручки</span>
@@ -1572,61 +1492,6 @@
       <div class="stat-row">
         <span class="stat-label">Δ vs пред. месяц</span>
         <span class="stat-value" id="fin-delta-prev">—</span>
-      </div>
-    </div>
-
-    <!-- EXPERTS (ПРОДЮСИРОВАНИЕ) -->
-    <div class="card">
-      <div class="section-header" style="margin:0 0 12px">
-        <div class="section-title">ПРОДЮСИРОВАНИЕ ЭКСПЕРТОВ (МАРТ 2026)</div>
-        <div class="section-line"></div>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">🎬 Татьяна (видео контент)</span>
-        <span class="stat-value cyan">50% от чистой</span>
-      </div>
-      <div class="stat-row" style="padding-left:12px">
-        <span class="stat-label">Выручка</span>
-        <span class="stat-value">6 967 PLN <span style="color:var(--text-muted);font-size:11px">(156 924 ₽)</span></span>
-      </div>
-      <div class="stat-row" style="padding-left:12px">
-        <span class="stat-label">Расходы</span>
-        <span class="stat-value">1 343 PLN</span>
-      </div>
-      <div class="stat-row" style="padding-left:12px">
-        <span class="stat-label">Чистая прибыль</span>
-        <span class="stat-value green">5 624 PLN</span>
-      </div>
-      <div class="stat-row" style="padding-left:12px">
-        <span class="stat-label"><b>Мой доход (50%)</b></span>
-        <span class="stat-value green"><b>2 812 PLN</b></span>
-      </div>
-      <div style="border-top:1px solid rgba(255,255,255,0.05);margin:8px 0"></div>
-      <div class="stat-row">
-        <span class="stat-label">💊 Оксана (похудение)</span>
-        <span class="stat-value cyan">фикс + 35%</span>
-      </div>
-      <div class="stat-row" style="padding-left:12px">
-        <span class="stat-label">Фикс</span>
-        <span class="stat-value">4 884 PLN <span style="color:var(--text-muted);font-size:11px">(110 000 ₽)</span></span>
-      </div>
-      <div style="border-top:1px solid rgba(255,255,255,0.05);margin:8px 0"></div>
-      <div class="stat-row">
-        <span class="stat-label">⚡ Алексей (энерговолна)</span>
-        <span class="stat-value cyan">фикс + 35%</span>
-      </div>
-      <div class="stat-row" style="padding-left:12px">
-        <span class="stat-label">Фикс</span>
-        <span class="stat-value">4 440 PLN <span style="color:var(--text-muted);font-size:11px">(100 000 ₽)</span></span>
-      </div>
-      <div style="border-top:1px solid rgba(255,255,255,0.05);margin:8px 0"></div>
-      <div class="stat-row">
-        <span class="stat-label"><b>ИТОГО мой доход от экспертов</b></span>
-        <span class="stat-value green" style="font-size:18px"><b>12 136 PLN</b></span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">🎯 Цель: 70 000 PLN/мес</span>
-        <span class="stat-value gold">17.3%</span>
       </div>
     </div>
 
@@ -1717,10 +1582,6 @@ const PROJECTS = [
   { name: "ZUS трекинг", emoji: "📋", status: "done", progress: 100, business: "Ресторан", tasks: "2/2" },
   { name: "GMB бот", emoji: "📍", status: "done", progress: 100, business: "GMB", tasks: "8/8" },
   { name: "Монитор агентов", emoji: "🛡", status: "done", progress: 100, business: "Все", tasks: "4/4" },
-  { name: "Распаковка экспертности", emoji: "🔍", status: "active", progress: 100, business: "Продюсирование", tasks: "3/3" },
-  { name: "Дебиторка CEG", emoji: "💼", status: "active", progress: 100, business: "Бизнес", tasks: "3/3" },
-  { name: "Бухгалтер", emoji: "📊", status: "active", progress: 100, business: "Оба", tasks: "5/5" },
-  { name: "HR / Кадры", emoji: "👥", status: "active", progress: 100, business: "Оба", tasks: "6/6" },
   { name: "OAuth миграция", emoji: "🔐", status: "done", progress: 100, business: "Все", tasks: "6/6" },
   { name: "Watchdog мониторинг", emoji: "🐕", status: "done", progress: 100, business: "Все", tasks: "1/1" },
   { name: "Google Workspace (gog)", emoji: "📧", status: "blocked", progress: 10, business: "Все", tasks: "1/5" },
@@ -1729,12 +1590,6 @@ const PROJECTS = [
 
 const TIMELINE = [
   // ── 24.03.2026 ──
-  { date: "27.03.2026", event: "HR / Кадры (@kadry_doc_hr_bot) — договоры, отпуска, документы", type: "launch" },
-  { date: "27.03.2026", event: "Бухгалтер (@podatkigov_pl_bot) — налоги, ZUS, VAT", type: "launch" },
-  { date: "27.03.2026", event: "Все боты на модель openclaw через gateway proxy", type: "feature" },
-  { date: "26.03.2026", event: "Дебиторка CEG (@consultingexpertgroup_bot) — отдельный бизнес", type: "launch" },
-  { date: "26.03.2026", event: "Распаковка экспертности (@raspakovkaexrt_bot) — анкета + AI", type: "launch" },
-  { date: "26.03.2026", event: "POSbistro: авто-скрап наличные/карта + утренняя сводка", type: "feature" },
   { date: "24.03.2026", event: "Монитор агентов запущен (@sanches_monitor_bot)", type: "launch" },
   { date: "24.03.2026", event: "GMB Специалист — отдельный бот (@gmb_agent_bot)", type: "launch" },
   { date: "24.03.2026", event: "Все боты переключены на OAuth (без API ключей)", type: "milestone" },
@@ -1780,12 +1635,16 @@ const WEEKDAYS = [
 
 // ── MONTHLY FINANCIAL DATA ──
 const MONTHS_DATA = [
-  { key: "2026-01", label: "ЯНВАРЬ 2026", revenue: 123893, receipts: 626, days: 31 },
-  { key: "2026-02", label: "ФЕВРАЛЬ 2026", revenue: 141662, receipts: 644, days: 28 },
-  { key: "2026-03", label: "МАРТ 2026", revenue: 118940, receipts: 620, days: 31, partial: true, partialDays: 25, partialRevenue: 118940, partialReceipts: 620 }
+  { key: "2026-01", label: "ЯНВАРЬ 2026", revenue: 123893, receipts: 626, days: 31,
+    expenses: { food: 29189, fot: 47429, rent: 6474, utilities: 10000, zus: 7000, other: 2900 } },
+  { key: "2026-02", label: "ФЕВРАЛЬ 2026", revenue: 141662, receipts: 644, days: 28,
+    expenses: { food: 33375, fot: 47429, rent: 6474, utilities: 10000, zus: 7000, other: 2900 } },
+  { key: "2026-03", label: "МАРТ 2026", revenue: 156223, receipts: 753, days: 31, guests: 1287, avgPerGuest: 121,
+    expenses: { food: 33162, fot: 47429, rent: 6474, utilities: 10000, zus: 7000, other: 2900 },
+    payments: { cash: 53861, card: 49284, bolt: 6203, other: 46820 } }
 ];
 // March is partial — showing projected full month as default, actual in note
-const FOT_TOTAL = 48169;
+const FOT_TOTAL = 47429;
 const SEATS = 40;
 const STAFF_COUNT = 11;
 let currentMonthIdx = MONTHS_DATA.length - 1;
@@ -1825,6 +1684,27 @@ function renderFinance() {
   // Receipts
   const rcpLabel = m.partial ? receipts + " (" + m.partialDays + " дн.)" : receipts.toString();
   document.getElementById('fin-receipts').textContent = rcpLabel;
+
+  // Expenses & Profit
+  const exp = m.expenses || {};
+  const totalExp = (exp.food||0) + (exp.fot||0) + (exp.rent||0) + (exp.utilities||0) + (exp.zus||0) + (exp.other||0);
+  const profit = rev - totalExp;
+  const margin = (profit / rev * 100);
+  const expEl = document.getElementById('fin-expenses');
+  if (expEl) {
+    expEl.textContent = formatNum(Math.round(totalExp)) + " PLN";
+    expEl.className = "stat-value red";
+  }
+  const profitEl = document.getElementById('fin-profit');
+  if (profitEl) {
+    profitEl.textContent = formatNum(Math.round(profit)) + " PLN";
+    profitEl.className = "stat-value " + (profit > 0 ? "green" : "red");
+  }
+  const marginEl = document.getElementById('fin-margin');
+  if (marginEl) {
+    marginEl.textContent = margin.toFixed(1) + "%";
+    marginEl.className = "stat-value " + (margin >= 20 ? "green" : margin >= 10 ? "gold" : "red");
+  }
 
   // FOT %
   const fotPct = FOT_TOTAL / rev * 100;
