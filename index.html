@@ -1450,20 +1450,12 @@
         <span class="stat-value" id="fin-receipts">—</span>
       </div>
       <div class="stat-row">
-        <span class="stat-label">💸 Расходы</span>
-        <span class="stat-value" id="fin-expenses">—</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">💰 Прибыль</span>
-        <span class="stat-value" id="fin-profit">—</span>
-      </div>
-      <div class="stat-row">
-        <span class="stat-label">📈 Рентабельность</span>
-        <span class="stat-value" id="fin-margin">—</span>
-      </div>
-      <div class="stat-row">
         <span class="stat-label">Безубыточность</span>
         <span class="stat-value green">95 162 PLN ✅</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Маржа</span>
+        <span class="stat-value green">76.44%</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Food cost</span>
@@ -1471,7 +1463,7 @@
       </div>
       <div class="stat-row">
         <span class="stat-label">ФОТ (весь)</span>
-        <span class="stat-value">47 429 PLN</span>
+        <span class="stat-value">48 169 PLN</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">ФОТ % от выручки</span>
@@ -1492,6 +1484,30 @@
       <div class="stat-row">
         <span class="stat-label">Δ vs пред. месяц</span>
         <span class="stat-value" id="fin-delta-prev">—</span>
+      </div>
+    </div>
+
+    <!-- EXPERT REVENUE -->
+    <div class="card">
+      <div class="section-header" style="margin:0 0 12px">
+        <div class="section-title">🎓 ЭКСПЕРТЫ — ВЫРУЧКА</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Март 2026</span>
+        <span class="stat-value cyan">289 000 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Апрель 2026 (12 дней)</span>
+        <span class="stat-value green">303 000 ₽</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Δ Апрель vs Март</span>
+        <span class="stat-value green">+14 000 ₽ (+4.8%)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Прогноз Апрель (30 дн.)</span>
+        <span class="stat-value" style="color:var(--gold)">~757 500 ₽</span>
       </div>
     </div>
 
@@ -1635,18 +1651,12 @@ const WEEKDAYS = [
 
 // ── MONTHLY FINANCIAL DATA ──
 const MONTHS_DATA = [
-  { key: "2026-01", label: "ЯНВАРЬ 2026", revenue: 123893, receipts: 626, days: 31,
-    expenses: { food: 29189, fot: 47429, rent: 6474, utilities: 10000, zus: 7000, other: 2900 } },
-  { key: "2026-02", label: "ФЕВРАЛЬ 2026", revenue: 141662, receipts: 644, days: 28,
-    expenses: { food: 33375, fot: 47429, rent: 6474, utilities: 10000, zus: 7000, other: 2900 } },
-  { key: "2026-03", label: "МАРТ 2026", revenue: 156223, receipts: 753, days: 31, guests: 1287, avgPerGuest: 121,
-    expenses: { food: 33162, fot: 47429, rent: 6474, utilities: 10000, zus: 7000, other: 2900 },
-    payments: { cash: 53861, card: 49284, bolt: 6203, other: 46820 } },
-  { key: "2026-04", label: "АПРЕЛЬ 2026", revenue: 0, receipts: 0, days: 30, partial: true, partialDays: 1, partialRevenue: 0, partialReceipts: 0,
-    expenses: { food: 0, fot: 47429, rent: 6474, utilities: 10000, zus: 7400, other: 2900 } }
+  { key: "2026-01", label: "ЯНВАРЬ 2026", revenue: 123893, receipts: 626, days: 31 },
+  { key: "2026-02", label: "ФЕВРАЛЬ 2026", revenue: 141662, receipts: 644, days: 28 },
+  { key: "2026-03", label: "МАРТ 2026", revenue: 118940, receipts: 620, days: 31, partial: true, partialDays: 25, partialRevenue: 118940, partialReceipts: 620 }
 ];
 // March is partial — showing projected full month as default, actual in note
-const FOT_TOTAL = 47429;
+const FOT_TOTAL = 48169;
 const SEATS = 40;
 const STAFF_COUNT = 11;
 let currentMonthIdx = MONTHS_DATA.length - 1;
@@ -1686,27 +1696,6 @@ function renderFinance() {
   // Receipts
   const rcpLabel = m.partial ? receipts + " (" + m.partialDays + " дн.)" : receipts.toString();
   document.getElementById('fin-receipts').textContent = rcpLabel;
-
-  // Expenses & Profit
-  const exp = m.expenses || {};
-  const totalExp = (exp.food||0) + (exp.fot||0) + (exp.rent||0) + (exp.utilities||0) + (exp.zus||0) + (exp.other||0);
-  const profit = rev - totalExp;
-  const margin = (profit / rev * 100);
-  const expEl = document.getElementById('fin-expenses');
-  if (expEl) {
-    expEl.textContent = formatNum(Math.round(totalExp)) + " PLN";
-    expEl.className = "stat-value red";
-  }
-  const profitEl = document.getElementById('fin-profit');
-  if (profitEl) {
-    profitEl.textContent = formatNum(Math.round(profit)) + " PLN";
-    profitEl.className = "stat-value " + (profit > 0 ? "green" : "red");
-  }
-  const marginEl = document.getElementById('fin-margin');
-  if (marginEl) {
-    marginEl.textContent = margin.toFixed(1) + "%";
-    marginEl.className = "stat-value " + (margin >= 20 ? "green" : margin >= 10 ? "gold" : "red");
-  }
 
   // FOT %
   const fotPct = FOT_TOTAL / rev * 100;
